@@ -1,0 +1,69 @@
+% Exercise Template
+%A LaTeX template for typesetting exercise in Persian (with cover page).
+%By: Zeinab Seifoori
+
+\documentclass[12pt]{exam}
+
+\usepackage{setspace}
+\usepackage{listings}
+\usepackage{graphicx,subfigure,wrapfig}
+\usepackage{multirow}
+%\usepackage{multicol}
+
+\usepackage[margin=20mm]{geometry}
+\usepackage{xepersian}
+\settextfont{XB Niloofar}
+
+\newcommand{\class}{درس مبانی هوش محاسباتی}
+\newcommand{\term}{نیم‌سال دوم ۰۱-۰۲}
+\newcommand{\college}{دانشکده مهندسی کامپیوتر}
+\newcommand{\prof}{استاد: دکتر اسدی}
+
+\singlespacing
+\parindent 0ex
+
+\lstset{
+keywordstyle=\textbf,
+identifierstyle=, 
+stringstyle=\ttfamily,
+commentstyle=\color{LimeGreen}, 
+stringstyle=\ttfamily,
+numberstyle=\footnotesize,
+showstringspaces=false} 
+\begin{document}
+
+\include{info}
+\pagestyle{empty}
+\include{cover-page}
+
+% These commands set up the running header on the top of the exam pages
+\pagestyle{head}
+\firstpageheader{}{}{}
+\runningheader{صفحه \thepage\ از \numpages}{}{\class}
+\runningheadrule
+%\begin{tabular}{p{.7\textwidth} l}
+%\multicolumn{2}{c}{\textbf{به نام خدا}}\\
+%\multirow{2}{*}{\includegraphics[scale=0.2] {images/logo.png}} & \\ \\
+%&  \textbf{\class}\\
+%&  \textbf{\term}\\
+%&  \textbf{\prof}\\ \\
+% \textbf{\college} &  \\
+%\end{tabular}\\
+
+%\rule[1ex]{\textwidth}{.1pt}
+%\textbf{تمرین سری پنجم}
+
+%\rule[1ex]{\textwidth}{.1pt}
+%\makebox[45mm]{\hrulefill}\\
+\tableofcontents
+\vspace{1cm}
+\setcounter{section}{-1}
+\section{مقدمه}
+هدف از این تمرین آشنایی بیشتر با الگوریتم‌های ژنتیک و استفاده‌ی بیشتر از آن‌ها در کاربردهای عملی است.
+\section{
+	مبانی و مفاهیم الگوریتم ژنتیک}
+\section{
+	درک و حل مسائل با الگوریتم ژنتیک}
+\section[
+پیاده‌سازی، ارزیابی و تجزیه‌ و تحلیل الگوریتم ژنتیک]{پیاده‌سازی، ارزیابی و تجزیه‌ و تحلیل الگوریتم ژنتیک جهت انتخاب بهترین ویژگی برای مسئله‌ی واقعی} 
+\end{document}
