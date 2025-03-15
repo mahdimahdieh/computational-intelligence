@@ -140,9 +140,7 @@
 			 	  ترکیب یکنواخت: برای انجام این ترکیب نیازمند به یک ماسک هستیم. این ماسک یک ژن تصادفی با مقادیر دودویی است که نشانگر این است که آن ژن را از کروموزوم اول بگیریم یا دوم. که انتخاب اول یا دوم هم احتمال است. ما با استفاده از
 			 	  
 
-\begin{lstlisting}[language=Python, caption= تولید ماسک تصادفی]
-	mask = ''.join(random.choice('01') for _ in range(8))
-\end{lstlisting}
+\lstlisting[language=Python, caption= تولید ماسک تصادفی]{mask.py}
 
 			 	  	
 			 	  
@@ -156,12 +154,8 @@
 			  برازش فرزندان: با استفاده از تکه کد زیر برازندگی هر فرزند را محاسبه می‌کنیم:
 			  
 			 
-			 \begin{lstlisting}[language=Python, caption= محاسبه‌ی برازندگی]
-			 	chromosome = input()
-			 	a, b, c, d, e, f, g, h = [int(char) for char in chromosome]
-			 	fitness = a + b - c - d + e + f - g - h
-			 	print(fitness)
-			 \end{lstlisting}
+			 \lstlisting[language=Python, caption= محاسبه‌ی برازندگی]{fitness.py}
+
 			  \[\mathrm{fit} (x_{21} )= 87123532=15\]
 			 \[\mathrm{fit} (x_{21})= 65416601=17\]
 			 \[\mathrm{fit} (x_{131}) = 65921235 = -5\]
