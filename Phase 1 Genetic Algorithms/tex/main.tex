@@ -45,6 +45,8 @@
 \renewcommand{\lstlistingname}{برنامه}
 
 \usepackage{graphicx,subfigure,wrapfig}
+\usepackage{float} %for floating shapes
+
 \usepackage{multirow}
 %\usepackage{multicol}
 
@@ -112,10 +114,16 @@
 	\begin{questions}
 		\question
 		\begin{parts}
-			\part 
-			
-			$n\times\frac{n - 1}{2} $
 			\part
+			 اگر هیچ گره‌ای نباید دو بار دیده شود، یک کروموزوم باید باید یک دور بین همه‌ی گره‌ها باشد که این دور شامل طی ترتیب طی کردن ۱۰ گره یا معادل طی کردن ۱۰ یال است. پس کروموزوم ما شامل ۱۰ ژن است.
+			\part
+			 اینکه بین کدام شهرها ارتباط وجود داشته باشد پیش‌فرض‌های مسئله است اما به طور کلی می‌توان گفت اگر گراف کامل و بدون طوقه باشد، از هر گره‌ای به همه‌ی گره‌های دیگر یال وجود دارد. ما در نظر گرفتیم این یال‌ها جهت‌دار است پس اگر از یک گره به گره‌ی دیگر رفت برگشت نیازی نیست. با این اوصاف تعداد کل ژن‌های ممکن 
+			 $n\times \frac{n-1}{2}$
+			 یال می‌شود. که اینجا 
+			 $n=10$
+			  است پس 
+			  $10\times \frac{9}{2}=45$
+			  ژن وجود دارد.
 		\end{parts}
 		
 		\question
@@ -225,9 +233,8 @@
 			\[P(x=2)=\frac{2}{43}=0.0465\]
 			\[P(x=3)=\frac{1}{43}=0.0233\]
 			\[P(x=4)=\frac{10}{43}=0.2326\]
-			می‌توانیم آن را به صورت یک گردونه هم نشان دهیم.
-			
-			\begin{wrapfigure}[l]{l}{.4\textwidth}
+			می‌توانیم آن را به صورت یک گردونه هم نشان دهیم
+			\begin{figure}[H]
 				\begin{center}
 \begin{tikzpicture}[x=0.05\textwidth, y=0.05\textwidth]
 \pie{
@@ -244,7 +251,7 @@
 	\end{tikzpicture}
 	\caption{گردونه‌ی شانس برای این نمونه از جمعیت}
 	\end{center}
-\end{wrapfigure}
+\end{figure}
 			
 
 			
