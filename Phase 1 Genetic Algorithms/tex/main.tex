@@ -48,6 +48,11 @@
 \usepackage{multirow}
 %\usepackage{multicol}
 
+
+%%%%%%%%%  for pie chart %%%%%
+\usepackage{pgf-pie}  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \usepackage[margin=20mm]{geometry}
 \usepackage{hyperref}
 \hypersetup{
@@ -219,6 +224,29 @@
 			\[P(x=2)=\frac{2}{43}=0.0465\]
 			\[P(x=3)=\frac{1}{43}=0.0233\]
 			\[P(x=4)=\frac{10}{43}=0.2326\]
+			می‌توانیم آن را به صورت یک گردونه هم نشان دهیم.
+			
+			\begin{wrapfigure}[l]{l}{.4\textwidth}
+				\begin{center}
+\begin{tikzpicture}[x=0.05\textwidth, y=0.05\textwidth]
+\pie{
+	16/\rl{نفر اول}  ,
+	16/دوم,
+	5/سوم,
+	5/چهارم,
+	5/ پنجم,
+	3/ششم,
+	2/ هفتم,
+	2/هشتم,
+	23/نهم,
+	23/ دهم}
+	\end{tikzpicture}
+	\caption{گردونه‌ی شانس برای این نمونه از جمعیت}
+	\end{center}
+\end{wrapfigure}
+			
+
+			
 			\part 
 			مزیت تابع جدید این است که به ازا‌ی هر مقدار 
 			\lr{x}،
