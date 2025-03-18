@@ -398,6 +398,87 @@
 	
 	
 	مجموعه‌ای از کروموزوم‌ها (یا راه‌حل‌های ممکن) به‌صورت تصادفی ایجاد می‌شود.
+	\newpage
+	 \lstinputlisting[language=Python, caption=مقداردهی اولیه]{./scripts/initialize.py}
+	 
+	 \part
+	 ارزیابی برازندگی
+	 \lr{(Fitness Evaluation)}:
+	 
+	 هر کروموزوم بر اساس یک تابع برازندگی ارزیابی می‌شود تا میزان تطابق آن با هدف مشخص شود. در کدی که ما زدیم تابع برازندگی، 
+	 \lr{accuracy\_score}
+	  مدل است.
+	 \part
+	 انتخاب
+	 \lr{(Selection)}:
+	 
+	 کروموزوم‌های بهتر شانس بیشتری برای انتخاب شدن و انتقال به نسل بعدی دارند. روش‌های مختلفی برای این کار وجود دارد، از جمله:
+	 
+	 چرخ رولت 
+	 \lr{(Roulette Wheel Selection)}
+	 
+	 
+	 انتخاب بر اساس رتبه
+	  \lr{(Rank-Based Selection)}
+	  
+	  
+	 انتخاب تورنمنت
+	  \lr{(Tournament Selection)}
+	  
+	  که ما هر ۳تای انها را پیاده سازی کردیم.
+	  
+	  
+	  \lstinputlisting[language=Python, caption=roulette-wheel-selection]{./scripts/roulette_wheel_selection.py}
+	  
+	  \lstinputlisting[language=Python, caption=rank-based-selection]{./scripts/rank_based_selection.py}
+	  
+	  \lstinputlisting[language=Python, caption=tournament-selection]{./scripts/tournament_selection.py}
+	  
+	  
+	  \part
+	  ترکیب
+	  \lr{(Crossover)}:
+	  
+	  
+	  کروموزوم‌های انتخاب شده با یکدیگر ترکیب می‌شوند تا فرزندان جدید تولید شود. روش‌های متداول شامل:
+	  
+	  ترکیب تک‌نقطه‌ای
+	  \lr{(Single-Point Crossover)}
+	  
+	  ترکیب دو‌نقطه‌ای 
+	  \lr{(Two-Point Crossover)}
+	  
+	  ترکیب یکنواخت
+	  \lr{(Uniform Crossover)}
+	  
+	  که ما هر ۳تای اینها را هم پیاده سازی کردیم.
+	  
+	  \lstinputlisting[language=Python, caption=single-point-crossover]{./scripts/single_point_crossover.py}
+	  
+	  \lstinputlisting[language=Python, caption=two-point-crossover]{./scripts/two_point_crossover.py}
+	  
+	  \lstinputlisting[language=Python, caption=uniform-crossover]{./scripts/uniform_crossover.py}
+	  
+	  \part
+	  جهش 
+	  \lr{(Mutation)}:
+	  
+	  برخی از کروموزوم‌ها دچار تغییرات جزئی می‌شوند تا از همگرایی زودرس جلوگیری شود و تنوع حفظ گردد.
+	 
+	 \lstinputlisting[language=Python, caption=mutate]{./scripts/mutate.py}
+	  
+	\part 
+	تکرار
+	\lr{(Iteration)}:
+	
+	همه‌ی مراحل الف تا ه را دوباره انجام میدهیم تا به یکی از دو شرط زیر برسیم:
+	
+	رسیدن به حداکثر تعداد تکرار
+	\lr{(iterations)}
+	
+	رسیدن به نقطه‌ی همگرایی‌(عدم بهبود برای مدت طولانی)
+	
+	
 	\end{parts}
 	\end{questions}
 	
