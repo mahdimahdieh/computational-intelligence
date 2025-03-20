@@ -1,0 +1,186 @@
+
+	\begin{questions}
+		\question
+	 پیش پردازش داده‌ها:
+		\begin{parts}
+			\part
+			حذف دادههای پرت:
+					
+			برای پر کردن دادههای پرت از روش 
+		\lr{IQR method}
+			استفاده میکنیم این روش به این صورت است که 
+			\lr{IQR}
+			را برابر با 
+			\lr{Q3 - Q1}
+			قرار میدهیم(چارک اول : 
+			\lr{Q1},
+			چارک سوم:
+			\lr{Q3}
+			)
+			 سپس دادههای کوچکتر از 
+			\lr{Q1 - 1.5*IQR}
+			و بزرگتر از 
+			\lr{Q3 + 1.5IQR}
+			را حذف میکنیم.
+			\lstinputlisting[language=Python, caption= حذف دادههای پرت]{./scripts/IQR.py}		
+			\part
+			رمزگذاری ویژگیهای دسته ای
+			\lr{(categorical)}:
+			
+			مهم ترین پارامتر در رمزگذاری
+			\lr{(encoding)}
+			 داده های دسته ای این است که ببینیم که این داده ها داده های کیفی ترتیبی 
+			 \lr{(Ordinal Qualitative)}
+			 هستند یا کیفی اسمی
+			 \lr{(Nominal Qualitative)}
+			 اگر داده ها کیفی ترتیبی باشند نیاز داریم که داده ها را به گونه ای پیش پردازش بکنیم که این ترتیب همچنان حفظ شود و در صورتی که داده ها اسمی باشند نیازی به این کار نداریم و میتوانیم برای هر دسته یک ستون درست کنیم که با مقادیر درست 
+			 \lr{(True)}
+	و غلط
+	  \lr{(False)}
+	  مشخص کنیم که به این دسته قرار دارد یا خیر.
+	  
+	  در داده هایی که در سوال به ما داده شده بود ستون های 
+	  \lr{Gender}، 
+	  \lr{Ever\_Married}
+	  ، 
+	  \lr{Graduated}
+	  ، 
+	  \lr{Profession}
+	  و 
+	  \lr{Var\_1}
+	  ستونهایی بودند که داده های انها به صورت کیفی اسمی بود و برای همین برای رمز گذاری انها از 
+	  \lr{get\_dummies}
+	   استفاده کردیم.
+
+	   
+	   \lstinputlisting[language=Python, caption=رمزگذاری با  
+	   \lr{get\_dummies} ]{./scripts/get_dummies.py}
+	   
+	   
+	   و ستون 
+	   \lr{Spending\_Score}
+	    را که دارای داده های ترتیبی به نام های 
+	   \lr{Low}،
+	    \lr{Average} و 
+	     \lr{High}
+	     بود را به صورت دیگری رمزگذاری کردیم تا مدل توانایی درک این که این 3 مقدار دارای ترتیب مشخصی هستند را متوجه شود.
+	     
+	     اینکار را به این صورت انجام دادیم که این 3 ستون را به ترتیب از کوچک به بزرگ از 0 تا 2 مقداردهی کردیم.
+	     
+	     \lstinputlisting[language=Python, caption=رمزگذاری برای ستون 
+	     \lr{spending\_score}]{./scripts/spending_score.py}
+	     
+	\part
+	پر کردن داده های خالی 
+	\lr{(Nan)}
+	:
+	
+	برای پرکردن داده های خالی از 
+	\lr{KNNImputer}
+	در کتابخانه sikitlearn استفاده کردیم به این صورت که 
+	\lr{n\_neighbors} که یکی از پارامترهای این تابع است را 8 انتخاب کردیم و این به این معناست که هر ردیفی که مفدار خالی داشته باشد میاید و 8 ردیف نزدیک به ان را پیدا میکند و سپس از مقادیر ستون مورد نظر(یعنی ستونی که مقدار خالی در ان قرار دارد.)
+	در ان ردیفها میانگین گرفته و انرا به عنوان مقدار جدید سلول خالی قرار میدهد.
+	\lstinputlisting[language=Python, caption= پر کردن سلول‌های خالی]{./scripts/filling_nans.py}
+	
+	\end{parts}
+	\end{questions}
+	
+	\begin{questions}
+	\question
+
+	پیاده سازی الگوریتم ژنتیک:
+	
+	الگوریتم ژنتیک یک روش جستجو و بهینه‌سازی مبتنی بر تکامل طبیعی است که در آن مفاهیمی از ژنتیک مانند انتخاب طبیعی، ترکیب و جهش برای یافتن بهترین جواب به کار گرفته می‌شوند. این الگوریتم در مسائل مختلف از جمله بهینه‌سازی، یادگیری ماشین و مسائل ترکیبیاتی مورد استفاده قرار می‌گیرد.
+	
+	مراحل الگوریتم ژنتیک:
+	\begin{parts}
+	\part
+	مقداردهی اولیه 
+	\lr{(Initialization)}
+	:
+	
+	
+	مجموعه‌ای از کروموزوم‌ها (یا راه‌حل‌های ممکن) به‌صورت تصادفی ایجاد می‌شود.
+	\newpage
+	 \lstinputlisting[language=Python, caption=مقداردهی اولیه]{./scripts/initialize.py}
+	 
+	 \part
+	 ارزیابی برازندگی
+	 \lr{(Fitness Evaluation)}:
+	 
+	 هر کروموزوم بر اساس یک تابع برازندگی ارزیابی می‌شود تا میزان تطابق آن با هدف مشخص شود. در کدی که ما زدیم تابع برازندگی، 
+	 \lr{accuracy\_score}
+	  مدل است.
+	 \part
+	 انتخاب
+	 \lr{(Selection)}:
+	 
+	 کروموزوم‌های بهتر شانس بیشتری برای انتخاب شدن و انتقال به نسل بعدی دارند. روش‌های مختلفی برای این کار وجود دارد، از جمله:
+	 
+	 چرخ رولت 
+	 \lr{(Roulette Wheel Selection)}
+	 
+	 
+	 انتخاب بر اساس رتبه
+	  \lr{(Rank-Based Selection)}
+	  
+	  
+	 انتخاب تورنمنت
+	  \lr{(Tournament Selection)}
+	  
+	  که ما هر ۳تای انها را پیاده سازی کردیم.
+	  
+	  
+	  \lstinputlisting[language=Python, caption=roulette-wheel-selection]{./scripts/roulette_wheel_selection.py}
+	  
+	  \lstinputlisting[language=Python, caption=rank-based-selection]{./scripts/rank_based_selection.py}
+	  
+	  \lstinputlisting[language=Python, caption=tournament-selection]{./scripts/tournament_selection.py}
+	  
+	  
+	  \part
+	  ترکیب
+	  \lr{(Crossover)}:
+	  
+	  
+	  کروموزوم‌های انتخاب شده با یکدیگر ترکیب می‌شوند تا فرزندان جدید تولید شود. روش‌های متداول شامل:
+	  
+	  ترکیب تک‌نقطه‌ای
+	  \lr{(Single-Point Crossover)}
+	  
+	  ترکیب دو‌نقطه‌ای 
+	  \lr{(Two-Point Crossover)}
+	  
+	  ترکیب یکنواخت
+	  \lr{(Uniform Crossover)}
+	  
+	  که ما هر ۳تای اینها را هم پیاده سازی کردیم.
+	  
+	  \lstinputlisting[language=Python, caption=single-point-crossover]{./scripts/single_point_crossover.py}
+	  
+	  \lstinputlisting[language=Python, caption=two-point-crossover]{./scripts/two_point_crossover.py}
+	  
+	  \lstinputlisting[language=Python, caption=uniform-crossover]{./scripts/uniform_crossover.py}
+	  
+	  \part
+	  جهش 
+	  \lr{(Mutation)}:
+	  
+	  برخی از کروموزوم‌ها دچار تغییرات جزئی می‌شوند تا از همگرایی زودرس جلوگیری شود و تنوع حفظ گردد.
+	 
+	 \lstinputlisting[language=Python, caption=mutate]{./scripts/mutate.py}
+	  
+	\part 
+	تکرار
+	\lr{(Iteration)}:
+	
+	همه‌ی مراحل الف تا ه را دوباره انجام میدهیم تا به یکی از دو شرط زیر برسیم:
+	
+	رسیدن به حداکثر تعداد تکرار
+	\lr{(iterations)}
+	
+	رسیدن به نقطه‌ی همگرایی‌(عدم بهبود برای مدت طولانی)
+	
+	
+	\end{parts}
+	\end{questions}
