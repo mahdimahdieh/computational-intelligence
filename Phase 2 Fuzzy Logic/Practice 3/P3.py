@@ -45,10 +45,10 @@ exercise_time['long'] = fuzz.trapmf(exercise_time.universe, (50, 60, 90, 90))
 
 
 def show(membership_func, name):
-    plt.figure(figsize=(8, 5))  # ایجاد یک شکل جدید
-    membership_functions = membership_func.terms.items()  # دریافت توابع عضویت و نام آنها
+    plt.figure(figsize=(8, 5))
+    membership_functions = membership_func.terms.items()
     for term_name, term in membership_functions:
-        plt.plot(membership_func.universe, term.mf, label=term_name, linewidth=1.5)  # رسم هر تابع عضویت
+        plt.plot(membership_func.universe, term.mf, label=term_name, linewidth=1.5)
     plt.title(name + " Membership Functions")
     plt.xlabel(name)
     plt.ylabel('Membership Degree')
