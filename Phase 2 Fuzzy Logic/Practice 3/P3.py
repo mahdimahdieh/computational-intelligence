@@ -69,137 +69,123 @@ show(exercise_time, 'exercise time')
 
 
 # Rules:
-rule1 = ctrl.Rule(
-                  antecedent=(physical_fitness['beginner'] & energy['low']),
+rule1 = ctrl.Rule(antecedent=(physical_fitness['beginner'] & energy['low']),
                   consequent=(exercise_intensity['low'], exercise_time['short']),
-                  label='beginner_low_energy')
+                  label='rule1: beginner_low_energy')
 
-# rule2 = ctrl.Rule(antecedent=(physical_fitness['beginner'] & (energy['medium'] | energy['high'])),
-#                   consequent=(exercise_intensity['low'] | exercise_intensity['medium'],
-#                               exercise_time['medium']),
-#                   label='beginner_higher_energy')
-rule2_intensity = ctrl.Rule(
-                  antecedent=(physical_fitness['beginner'] & (energy['medium'] | energy['high'])),
-                  consequent=(exercise_intensity['low'] | exercise_intensity['medium']),
-                  label='beginner_higher_energy_intensity'
-)
+rule2 = ctrl.Rule(antecedent=(physical_fitness['beginner'] & (energy['medium'] | energy['high'])),
+                  consequent=exercise_intensity['low'],
+                  label='rule2: beginner_higher_energy_intensity_low')
 
-rule2_time = ctrl.Rule(
-                  antecedent=(physical_fitness['beginner'] & (energy['medium'] | energy['high'])),
+rule3 = ctrl.Rule(antecedent=(physical_fitness['beginner'] & (energy['medium'] | energy['high'])),
+                  consequent=exercise_intensity['medium'],
+                  label='rule3: beginner_higher_energy_intensity_medium')
+
+rule4 = ctrl.Rule(antecedent=(physical_fitness['beginner'] & (energy['medium'] | energy['high'])),
                   consequent=exercise_time['medium'],
-                  label='beginner_higher_energy_time'
-)
+                  label='rule4: beginner_higher_energy_time')
 
-# rule3 = ctrl.Rule(antecedent=(physical_fitness['intermediate'] & energy['high']),
-#                   consequent=(exercise_intensity['medium'] | exercise_intensity['high'],
-#                               exercise_time['medium'] | exercise_time['long']),
-#                   label='intermediate_high_energy')
-rule3_intensity = ctrl.Rule(
-                  antecedent=(physical_fitness['intermediate'] & energy['high']),
-                  consequent=(exercise_intensity['medium'] | exercise_intensity['high']),
-                  label='intermediate_high_energy_intensity')
+rule5 = ctrl.Rule(antecedent=(physical_fitness['intermediate'] & energy['high']),
+                  consequent=exercise_intensity['medium'],
+                  label='rule5: intermediate_high_energy_intensity_medium')
 
-rule3_time = ctrl.Rule(
-                  antecedent=(physical_fitness['intermediate'] & energy['high']),
-                  consequent=(exercise_time['medium'] | exercise_time['long']),
-                  label='intermediate_high_energy_time')
+rule6 = ctrl.Rule(antecedent=(physical_fitness['intermediate'] & energy['high']),
+                  consequent=exercise_intensity['high'],
+                  label='rule6: intermediate_high_energy_intensity_high')
 
-# rule4 = ctrl.Rule(antecedent=(sports_goal['weight loss'] & age['elderly']),
-#                   consequent=(exercise_intensity['low'] | exercise_intensity['medium'],
-#                               exercise_time['short']),
-#                   label='weight_loss_elderly')
-rule4_intensity = ctrl.Rule(
-                  antecedent=(sports_goal['weight loss'] & age['elderly']),
-                  consequent=(exercise_intensity['low'] | exercise_intensity['medium']),
-                  label='weight_loss_elderly_intensity')
+rule7 = ctrl.Rule(antecedent=(physical_fitness['intermediate'] & energy['high']),
+                  consequent=exercise_time['medium'],
+                  label='rule7: intermediate_high_energy_time_medium')
 
-rule4_time = ctrl.Rule(
-                  antecedent=(sports_goal['weight loss'] & age['elderly']),
-                  consequent=(exercise_time['short']),
-                  label='weight_loss_elderly_time')
+rule8 = ctrl.Rule(antecedent=(physical_fitness['intermediate'] & energy['high']),
+                  consequent=exercise_time['long'],
+                  label='rule8: intermediate_high_energy_time_long')
 
-# rule5 = ctrl.Rule(antecedent=(sports_goal['muscle gain'] & age['young']),
-#                   consequent=(exercise_intensity['high'],
-#                               exercise_time['medium'] | exercise_time['long']),
-#                   label='muscle_gain_young')
+rule9 = ctrl.Rule(antecedent=(sports_goal['weight loss'] & age['elderly']),
+                  consequent=exercise_intensity['low'],
+                  label='rule9: weight_loss_elderly_intensity_low')
 
-rule5_intensity = ctrl.Rule(
-                  antecedent=(sports_goal['muscle gain'] & age['young']),
-                  consequent=(exercise_intensity['high']),
-                  label='muscle_gain_young_intensity')
+rule10 = ctrl.Rule(antecedent=(sports_goal['weight loss'] & age['elderly']),
+                   consequent=exercise_intensity['medium'],
+                   label='rule10: weight_loss_elderly_intensity_medium')
 
-rule5_time = ctrl.Rule(antecedent=(sports_goal['muscle gain'] & age['young']),
-                  consequent=(exercise_time['medium'] | exercise_time['long']),
-                  label='muscle_gain_young_time')
+rule11 = ctrl.Rule(antecedent=(sports_goal['weight loss'] & age['elderly']),
+                   consequent=exercise_time['short'],
+                   label='rule11: weight_loss_elderly_time')
 
-rule6 = ctrl.Rule(
-                  antecedent=(sports_goal['general fitness'] & physical_fitness['intermediate'] & energy['medium']),
-                  consequent=(exercise_intensity['medium'],exercise_time['medium']),
-                  label='general_fitness')
+rule12 = ctrl.Rule(antecedent=(sports_goal['muscle gain'] & age['young']),
+                   consequent=exercise_intensity['high'],
+                   label='rule12: muscle_gain_young_intensity_high')
 
-# rule7 = ctrl.Rule(antecedent=(weight['overweight'] & sports_goal['weight loss']),
-#                   consequent=(exercise_intensity['low'] | exercise_intensity['medium'],
-#                               exercise_time['short']),
-#                   label='overweight_weight_loss')
-rule7_intensity = ctrl.Rule(
-                  antecedent=(weight['overweight'] & sports_goal['weight loss']),
-                  consequent=(exercise_intensity['low'] | exercise_intensity['medium']),
-                  label='overweight_weight_loss_intensity')
+rule13 = ctrl.Rule(antecedent=(sports_goal['muscle gain'] & age['young']),
+                   consequent=exercise_time['medium'],
+                   label='rule13: muscle_gain_young_time_medium')
 
-rule7_time = ctrl.Rule(
-                  antecedent=(weight['overweight'] & sports_goal['weight loss']),
-                  consequent=(exercise_time['short']),
-                  label='overweight_weight_loss_time')
+rule14 = ctrl.Rule(antecedent=(sports_goal['muscle gain'] & age['young']),
+                   consequent=exercise_time['long'],
+                   label='rule14: muscle_gain_young_time_long')
 
-rule8 = ctrl.Rule(
-                       antecedent=(physical_fitness['intermediate'] & energy['low']),
-                       consequent=(exercise_intensity['low'], exercise_time['short']),
-                       label='intermediate_low_energy')
+rule15 = ctrl.Rule(antecedent=(sports_goal['general fitness'] & physical_fitness['intermediate'] & energy['medium']),
+                   consequent=(exercise_intensity['medium'], exercise_time['medium']),
+                   label='rule15: general_fitness')
 
-rule9 = ctrl.Rule(
-                       antecedent=(physical_fitness['advanced'] & energy['high']),
-                       consequent=(exercise_intensity['high'], exercise_time['long']),
-                       label='advanced_high_energy')
+rule16 = ctrl.Rule(antecedent=(weight['overweight'] & sports_goal['weight loss']),
+                   consequent=exercise_intensity['low'],
+                   label='rule16: overweight_weight_loss_intensity_low')
 
-rule10 = ctrl.Rule(
-                       antecedent=(age['young'] & sports_goal['general fitness']),
-                       consequent=(exercise_intensity['medium'], exercise_time['medium']),
-                       label='young_general_fitness')
+rule17 = ctrl.Rule(antecedent=(weight['overweight'] & sports_goal['weight loss']),
+                   consequent=exercise_intensity['medium'],
+                   label='rule17: overweight_weight_loss_intensity_medium')
 
-# rule11 = ctrl.Rule(antecedent=(sports_goal['muscle gain'] & age['middle-aged']),
-#                        consequent=(exercise_intensity['medium'] | exercise_intensity['high'], exercise_time['short']),
-#                        label='middle_aged_muscle_gain')
-rule11_intensity = ctrl.Rule(
-                       antecedent=(sports_goal['muscle gain'] & age['middle-aged']),
-                       consequent=(exercise_intensity['medium'] | exercise_intensity['high']),
-                       label='middle_aged_muscle_gain_intensity')
+rule18 = ctrl.Rule(antecedent=(weight['overweight'] & sports_goal['weight loss']),
+                   consequent=exercise_time['short'],
+                   label='rule18: overweight_weight_loss_time')
 
-rule11_time = ctrl.Rule(
-                       antecedent=(sports_goal['muscle gain'] & age['middle-aged']),
-                       consequent=(exercise_time['short']),
-                       label='middle_aged_muscle_gain_time')
+rule19 = ctrl.Rule(antecedent=(physical_fitness['intermediate'] & energy['low']),
+                   consequent=(exercise_intensity['low'], exercise_time['short']),
+                   label='rule19: intermediate_low_energy')
 
-# rule12 = ctrl.Rule(antecedent=(weight['overweight'] & energy['high'] & sports_goal['general fitness']),
-#                        consequent=(exercise_intensity['medium'] | exercise_intensity['high'], exercise_time['medium']),
-#                        label='overweight_high_energy_general_fitness')
-rule12_intensity = ctrl.Rule(
-                       antecedent=(weight['overweight'] & energy['high'] & sports_goal['general fitness']),
-                       consequent=(exercise_intensity['medium'] | exercise_intensity['high']),
-                       label='overweight_high_energy_general_fitness_intensity')
+rule20 = ctrl.Rule(antecedent=(physical_fitness['advanced'] & energy['high']),
+                   consequent=(exercise_intensity['high'], exercise_time['long']),
+                   label='rule20: advanced_high_energy')
 
-rule12_time = ctrl.Rule(
-                       antecedent=(weight['overweight'] & energy['high'] & sports_goal['general fitness']),
-                       consequent=(exercise_time['medium']),
-                       label='overweight_high_energy_general_fitness_time')
+rule21 = ctrl.Rule(antecedent=(age['young'] & sports_goal['general fitness']),
+                   consequent=(exercise_intensity['medium'], exercise_time['medium']),
+                   label='rule21: young_general_fitness')
 
+rule22 = ctrl.Rule(antecedent=(sports_goal['muscle gain'] & age['middle-aged']),
+                   consequent=exercise_intensity['medium'],
+                   label='rule22: middle_aged_muscle_gain_intensity_medium')
 
+rule23 = ctrl.Rule(antecedent=(sports_goal['muscle gain'] & age['middle-aged']),
+                   consequent=exercise_intensity['high'],
+                   label='rule23: middle_aged_muscle_gain_intensity_high')
+
+rule24 = ctrl.Rule(antecedent=(sports_goal['muscle gain'] & age['middle-aged']),
+                   consequent=exercise_time['short'],
+                   label='rule24: middle_aged_muscle_gain_time_short')
+
+rule25 = ctrl.Rule(antecedent=(weight['overweight'] & energy['high'] & sports_goal['general fitness']),
+                   consequent=exercise_intensity['medium'],
+                   label='rule25: overweight_high_energy_general_fitness_intensity_medium')
+
+rule26 = ctrl.Rule(antecedent=(weight['overweight'] & energy['high'] & sports_goal['general fitness']),
+                   consequent=exercise_intensity['high'],
+                   label='rule26: overweight_high_energy_general_fitness_intensity_high')
+
+rule27 = ctrl.Rule(antecedent=(weight['overweight'] & energy['high'] & sports_goal['general fitness']),
+                   consequent=exercise_time['medium'],
+                   label='rule27: overweight_high_energy_general_fitness_time_medium')
 
 
 
 # Fuzzy Control System:
-all_rules = [rule1, rule2_intensity, rule2_time, rule3_intensity, rule3_time, rule4_intensity, rule4_time,
-             rule5_intensity, rule5_time, rule6, rule7_intensity, rule7_time, rule8, rule9, rule10,
-             rule11_intensity, rule11_time,rule12_intensity, rule12_time]
+all_rules = [
+    rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8,
+    rule9, rule10, rule11, rule12, rule13, rule14, rule15, rule16,
+    rule17, rule18, rule19, rule20, rule21, rule22, rule23, rule24,
+    rule25, rule26, rule27
+]
 
 
 exercise_ctrl = ctrl.ControlSystem(all_rules)
@@ -215,5 +201,10 @@ exercise_simulation.input['weight'] = 75
 
 exercise_simulation.compute()
 
+#crisp:
 print("Intensity:", exercise_simulation.output['exercise_intensity'])
 print("Time:", exercise_simulation.output['exercise_time'])
+
+
+exercise_intensity.view(sim = exercise_simulation)
+exercise_time.view(sim = exercise_simulation)
