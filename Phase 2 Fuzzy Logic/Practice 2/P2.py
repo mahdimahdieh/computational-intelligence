@@ -2,45 +2,52 @@ import numpy as np
 import skfuzzy as fuzz
 import matplotlib.pyplot as plt
 
+# *****************************
+# Part 1: Define membership functions
+# *****************************
 
-x_soil = np.arange(0, 101, 1)
-x_weather = np.arange(0, 101, 1)
-x_irrigation = np.arange(0, 101, 1)
+# Domains:
+x_soil = np.arange(0, 101, 1)        # Soil moisture percentage
+x_weather = np.arange(0, 101, 1)     # Weather condition index
+x_irrigation = np.arange(0, 101, 1)  # Irrigation amount percentage
 
-# Creating membership functions:
-
-soil_dry = fuzz.trapmf(x_soil, [0, 0, 20, 40])
+# Soil moisture membership functions:
+soil_dry    = fuzz.trapmf(x_soil, [0, 0, 20, 40])
 soil_medium = fuzz.gaussmf(x_soil, 50, 12)
-soil_wet = fuzz.trapmf(x_soil, [60, 80, 100, 100])
+soil_wet    = fuzz.trapmf(x_soil, [60, 80, 100, 100])
 
-weather_sunny = fuzz.trapmf(x_weather, [0, 0, 30, 50])
+# Weather condition membership functions:
+weather_sunny  = fuzz.trapmf(x_weather, [0, 0, 30, 50])
 weather_cloudy = fuzz.gaussmf(x_weather, 60, 10)
-weather_rainy = fuzz.trapmf(x_weather, [50, 70, 100, 100])
+weather_rainy  = fuzz.trapmf(x_weather, [50, 70, 100, 100])
 
-irrigation_none = fuzz.trimf(x_irrigation, [0, 0, 15])
-irrigation_low = fuzz.trimf(x_irrigation, [10, 25, 40])
+# Irrigation amount membership functions:
+irrigation_none   = fuzz.trimf(x_irrigation, [0, 0, 15])
+irrigation_low    = fuzz.trimf(x_irrigation, [10, 25, 40])
 irrigation_medium = fuzz.trimf(x_irrigation, [35, 50, 65])
-irrigation_high = fuzz.trapmf(x_irrigation, [60, 80, 100, 100])
+irrigation_high   = fuzz.trapmf(x_irrigation, [60, 80, 100, 100])
 
-# Show membership functions:
+# *****************************
+# Plot membership functions
+# *****************************
 
-## For Soil Moisture Level:
-plt.figure(figsize=(8, 4))
-plt.plot(x_soil, soil_dry, 'b', label='Dry', linewidth=1.5)
-plt.plot(x_soil, soil_medium, 'g', label='Medium', linewidth=1.5)
-plt.plot(x_soil, soil_wet, 'r', label='Wet', linewidth=1.5)
+# for Soil Moisture:
+plt.figure(figsize=(8, 5))
+plt.plot(x_soil, soil_dry, label='Dry')
+plt.plot(x_soil, soil_medium, label='Medium')
+plt.plot(x_soil, soil_wet, label='Wet')
 plt.title('Soil Moisture Membership Functions')
-plt.xlabel('Moisture Level (%)')
+plt.xlabel('Soil Moisture (%)')
 plt.ylabel('Membership Degree')
 plt.legend()
 plt.grid()
 plt.show()
 
-## For Weather Condition:
-plt.figure(figsize=(8, 4))
-plt.plot(x_weather, weather_sunny, 'y', label='Sunny', linewidth=1.5)
-plt.plot(x_weather, weather_cloudy, 'gray', label='Cloudy', linewidth=1.5)
-plt.plot(x_weather, weather_rainy, 'b', label='Rainy', linewidth=1.5)
+# for Weather Condition:
+plt.figure(figsize=(8, 5))
+plt.plot(x_weather, weather_sunny, label='Sunny')
+plt.plot(x_weather, weather_cloudy, label='Cloudy')
+plt.plot(x_weather, weather_rainy, label='Rainy')
 plt.title('Weather Condition Membership Functions')
 plt.xlabel('Weather Condition (%)')
 plt.ylabel('Membership Degree')
@@ -48,12 +55,12 @@ plt.legend()
 plt.grid()
 plt.show()
 
-## For Irrigation Amount:
-plt.figure(figsize=(8, 4))
-plt.plot(x_irrigation, irrigation_none, 'gray', label='None', linewidth=1.5)
-plt.plot(x_irrigation, irrigation_low, 'b', label='Low', linewidth=1.5)
-plt.plot(x_irrigation, irrigation_medium, 'g', label='Medium', linewidth=1.5)
-plt.plot(x_irrigation, irrigation_high, 'r', label='High', linewidth=1.5)
+# for Irrigation Amount:
+plt.figure(figsize=(8, 5))
+plt.plot(x_irrigation, irrigation_none, label='None')
+plt.plot(x_irrigation, irrigation_low, label='Low')
+plt.plot(x_irrigation, irrigation_medium, label='Medium')
+plt.plot(x_irrigation, irrigation_high, label='High')
 plt.title('Irrigation Amount Membership Functions')
 plt.xlabel('Irrigation Amount (%)')
 plt.ylabel('Membership Degree')
@@ -61,77 +68,108 @@ plt.legend()
 plt.grid()
 plt.show()
 
-# Fuzzy Inference:
 
-# input sample:
+def fuzzify_inputs(soil_val, weather_val):
+    mu_soil = {
+        'dry':    fuzz.interp_membership(x_soil, soil_dry, soil_val),
+        'medium': fuzz.interp_membership(x_soil, soil_medium, soil_val),
+        'wet':    fuzz.interp_membership(x_soil, soil_wet, soil_val)
+    }
+    mu_weather = {
+        'sunny':  fuzz.interp_membership(x_weather, weather_sunny, weather_val),
+        'cloudy': fuzz.interp_membership(x_weather, weather_cloudy, weather_val),
+        'rainy':  fuzz.interp_membership(x_weather, weather_rainy, weather_val)
+    }
+    return mu_soil, mu_weather
+
+
+def infer_irrigation(mu_soil, mu_weather):
+    # Rules:
+    rule1 = np.fmin(mu_soil['dry'],    mu_weather['sunny'])
+    rule2 = np.fmin(mu_soil['dry'],    mu_weather['cloudy'])
+    rule3 = np.fmin(mu_soil['dry'],    mu_weather['rainy'])
+    rule4 = np.fmin(mu_soil['medium'], mu_weather['sunny'])
+    rule5 = np.fmin(mu_soil['medium'], mu_weather['cloudy'])
+    rule6 = np.fmin(mu_soil['medium'], mu_weather['rainy'])
+    rule7 = np.fmin(mu_soil['wet'],    mu_weather['sunny'])
+    rule8 = np.fmin(mu_soil['wet'],    mu_weather['cloudy'])
+    rule9 = np.fmin(mu_soil['wet'],    mu_weather['rainy'])
+
+    # Aggregation of rule outputs
+    high_activation   = rule1
+    medium_activation = np.fmax(rule2, rule4)
+    low_activation    = np.fmax(rule3, np.fmax(rule5, rule7))
+    none_activation   = np.fmax(rule6, np.fmax(rule8, rule9))
+
+    # Clip output MFs
+    high_clip   = np.fmin(high_activation,   irrigation_high)
+    medium_clip = np.fmin(medium_activation, irrigation_medium)
+    low_clip    = np.fmin(low_activation,    irrigation_low)
+    none_clip   = np.fmin(none_activation,   irrigation_none)
+
+    # Aggregate all clipped output MFs
+    aggregated = np.fmax(none_clip,
+                  np.fmax(low_clip,
+                  np.fmax(medium_clip, high_clip)))
+    return aggregated
+
+
+def defuzzify_output(aggregated_mf, method='centroid'):
+    if method in ['centroid', 'mom', 'lom', 'som', 'bisector']:
+        return fuzz.defuzz(x_irrigation, aggregated_mf, method)
+    else:
+        raise ValueError(f"Unknown defuzz method: {method}")
+
+# *****************************
+# Part 2: Example and defuzzification comparison
+# *****************************
 input_soil = 30
 input_weather = 40
+mu_s, mu_w = fuzzify_inputs(input_soil, input_weather)
+agg = infer_irrigation(mu_s, mu_w)
 
-# Calculate the membership degrees of the inputs:
-mu_soil_dry = fuzz.interp_membership(x_soil, soil_dry, input_soil)
-mu_soil_medium = fuzz.interp_membership(x_soil, soil_medium, input_soil)
-mu_soil_wet = fuzz.interp_membership(x_soil, soil_wet, input_soil)
-
-mu_weather_sunny = fuzz.interp_membership(x_weather, weather_sunny, input_weather)
-mu_weather_cloudy = fuzz.interp_membership(x_weather, weather_cloudy, input_weather)
-mu_weather_rainy = fuzz.interp_membership(x_weather, weather_rainy, input_weather)
-
-#Rules:
-
-#if soil is dry AND weather is sunny then irrigation is high:
-rule1_activation = np.fmin(mu_soil_dry, mu_weather_sunny)
-#if soil is dry AND weather is cloudy then irrigation is medium:
-rule2_activation = np.fmin(mu_soil_dry, mu_weather_cloudy)
-#if soil is dry AND weather is rainy then irrigation is low:
-rule3_activation = np.fmin(mu_soil_dry, mu_weather_rainy)
-#if soil is medium AND weather is sunny then irrigation is medium:
-rule4_activation = np.fmin(mu_soil_medium, mu_weather_sunny)
-#if soil is medium AND weather is cloudy then irrigation is low:
-rule5_activation = np.fmin(mu_soil_medium, mu_weather_cloudy)
-#if soil is medium AND weather is rainy then irrigation is none:
-rule6_activation = np.fmin(mu_soil_medium, mu_weather_rainy)
-#if soil is wet AND weather is sunny then irrigation is low:
-rule7_activation = np.fmin(mu_soil_wet, mu_weather_sunny)
-#if soil is wet AND weather is cloudy then irrigation is none:
-rule8_activation = np.fmin(mu_soil_wet, mu_weather_cloudy)
-#if soil is wet AND weather is rainy then irrigation is none:
-rule9_activation = np.fmin(mu_soil_wet, mu_weather_rainy)
-
-# Maximizing operations:
-activation_high = rule1_activation
-activation_medium = np.fmax(rule2_activation, rule4_activation)
-activation_low = np.fmax(rule3_activation, np.fmax(rule5_activation, rule7_activation))
-activation_none = np.fmax(rule6_activation, np.fmax(rule8_activation, rule9_activation))
-
-
-irrigation_none_clip = np.fmin(activation_none, irrigation_none)
-irrigation_low_clip = np.fmin(activation_low, irrigation_low)
-irrigation_medium_clip = np.fmin(activation_medium, irrigation_medium)
-irrigation_high_clip = np.fmin(activation_high, irrigation_high)
-
-
-aggregated_mf = np.fmax(irrigation_none_clip, np.fmax(irrigation_low_clip, np.fmax(irrigation_medium_clip, irrigation_high_clip)))
+methods = ['centroid', 'mom', 'lom', 'som', 'bisector']
+print("Defuzzification results for sample input:")
+for m in methods:
+    print(f"{m}: {defuzzify_output(agg, m):.2f}%")
 
 
 
-plt.figure(figsize=(8, 4))
-plt.plot(x_irrigation, aggregated_mf, 'm', label='Aggregated MF', linewidth=2)
-plt.title('Aggregated Output Membership Function')
-plt.xlabel('Irrigation Amount (%)')
-plt.ylabel('Membership Degree')
-plt.legend()
+# *****************************
+# Part 3: 10-day simulation
+# *****************************
+weather_sequence = ['sunny']*4 + ['cloudy']*3 + ['rainy']*3
+weather_loss = {'sunny': 8, 'cloudy': 4, 'rainy': 2}
+
+days = len(weather_sequence)
+soil_history = np.zeros(days+1)
+irrigation_history = np.zeros(days)
+soil_history[0] = 50  # initial soil moisture
+
+for t in range(days):
+    current_soil = soil_history[t]
+    # map weather to numeric index
+    weather_value = {'sunny': 20, 'cloudy': 50, 'rainy': 80}[weather_sequence[t]]
+    mu_s, mu_w = fuzzify_inputs(current_soil, weather_value)
+    agg = infer_irrigation(mu_s, mu_w)
+    irrigation_amount = defuzzify_output(agg, 'centroid')
+    irrigation_history[t] = irrigation_amount
+    # update soil moisture
+    soil_history[t+1] = np.clip(current_soil + 0.5*irrigation_amount - weather_loss[weather_sequence[t]], 0, 100)
+
+# Plot results:
+plt.figure(figsize=(8, 5))
+plt.plot(range(days+1), soil_history, marker='o')
+plt.title('Soil Moisture Over Time')
+plt.xlabel('Day')
+plt.ylabel('Soil Moisture (%)')
 plt.grid()
 plt.show()
 
-# Defuzzification:
-centroid_val = fuzz.defuzz(x_irrigation, aggregated_mf, 'centroid')
-mom_val      = fuzz.defuzz(x_irrigation, aggregated_mf, 'mom')
-lom_val      = fuzz.defuzz(x_irrigation, aggregated_mf, 'lom')
-som_val      = fuzz.defuzz(x_irrigation, aggregated_mf, 'som')
-bisector_val = fuzz.defuzz(x_irrigation, aggregated_mf, 'bisector')
-
-print(f"Centroid: {centroid_val:.2f}%")
-print(f"Mean of Maximum (MOM): {mom_val:.2f}%")
-print(f"Largest of Maximum (LOM): {lom_val:.2f}%")
-print(f"Smallest of Maximum (SOM): {som_val:.2f}%")
-print(f"Bisector: {bisector_val:.2f}%")
+plt.figure(figsize=(8, 5))
+plt.bar(range(days), irrigation_history)
+plt.title('Daily Irrigation Amount (Centroid Method)')
+plt.xlabel('Day')
+plt.ylabel('Irrigation (%)')
+plt.grid(axis='y')
+plt.show()
