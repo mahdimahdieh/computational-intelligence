@@ -85,18 +85,29 @@ def fuzzify_inputs(soil_val, weather_val):
 
 def infer_irrigation(mu_soil, mu_weather):
     # Rules:
+
+
+    # if soil is dry AND weather is sunny then irrigation is high:
     rule1 = np.fmin(mu_soil['dry'],    mu_weather['sunny'])
+    # if soil is dry AND weather is cloudy then irrigation is medium:
     rule2 = np.fmin(mu_soil['dry'],    mu_weather['cloudy'])
+    # if soil is dry AND weather is rainy then irrigation is low:
     rule3 = np.fmin(mu_soil['dry'],    mu_weather['rainy'])
+    # if soil is medium AND weather is sunny then irrigation is medium:
     rule4 = np.fmin(mu_soil['medium'], mu_weather['sunny'])
+    # if soil is medium AND weather is cloudy then irrigation is low:
     rule5 = np.fmin(mu_soil['medium'], mu_weather['cloudy'])
+    # if soil is medium AND weather is rainy then irrigation is none:
     rule6 = np.fmin(mu_soil['medium'], mu_weather['rainy'])
+    # if soil is wet AND weather is sunny then irrigation is low:
     rule7 = np.fmin(mu_soil['wet'],    mu_weather['sunny'])
+    # if soil is wet AND weather is cloudy then irrigation is none:
     rule8 = np.fmin(mu_soil['wet'],    mu_weather['cloudy'])
+    # if soil is wet AND weather is rainy then irrigation is none:
     rule9 = np.fmin(mu_soil['wet'],    mu_weather['rainy'])
 
     # Aggregation of rule outputs
-    high_activation   = rule1
+    high_activation   = rule1 #Only rule 1 produces high irrigation.
     medium_activation = np.fmax(rule2, rule4)
     low_activation    = np.fmax(rule3, np.fmax(rule5, rule7))
     none_activation   = np.fmax(rule6, np.fmax(rule8, rule9))
@@ -125,6 +136,7 @@ def defuzzify_output(aggregated_mf, method='centroid'):
 # *****************************
 input_soil = 30
 input_weather = 40
+
 mu_s, mu_w = fuzzify_inputs(input_soil, input_weather)
 agg = infer_irrigation(mu_s, mu_w)
 
