@@ -143,7 +143,7 @@ agg = infer_irrigation(mu_s, mu_w)
 methods = ['centroid', 'mom', 'lom', 'som', 'bisector']
 print("Defuzzification results for sample input:")
 for m in methods:
-    print(f"{m}: {defuzzify_output(agg, m):.2f}%")
+    print(f"{m}: {defuzzify_output(agg, m):.2f}")
 
 
 
