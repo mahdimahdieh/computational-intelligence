@@ -3,3 +3,5 @@ Assignment and projects of the "Computational Intelligence" course - UI 4031 (20
 
 ## Phase 1: Genetic Algorithms
 
+## Phase 2: Fuzzy Logic
+

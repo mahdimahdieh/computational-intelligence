@@ -1,0 +1,120 @@
+% Exercise Template
+%A LaTeX template for typesetting exercise in Persian (with cover page).
+%By: Zeinab Seifoori
+
+\documentclass[12pt]{exam}
+
+\usepackage{setspace}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Define colors
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+
+% Configure listings style
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize\setLTR,
+	breakatwhitespace=true,         
+	breaklines=true,                 
+	captionpos=top, % Changed to top placement
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2,
+	frame=single,
+	abovecaptionskip=5pt, % Space between caption and code
+	belowcaptionskip=5pt, % Space between code and potential bottom text
+}
+
+
+\lstset{style=mystyle}
+
+% Set Persian caption for listings
+\renewcommand{\lstlistingname}{برنامه}
+
+\usepackage{graphicx,subfigure,wrapfig}
+\usepackage{float} %for floating shapes
+
+\usepackage{multirow}
+%\usepackage{multicol}
+
+
+%%%%%%%%%  for pie chart %%%%%
+\usepackage{pgf-pie}  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%% for qoute block %%%%%
+\usepackage{etoolbox}
+%%%%%%%%%%%%%%%%%%%%%%5
+
+
+\usepackage[margin=20mm]{geometry}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+	pdftitle={Overleaf Example},
+	pdfpagemode=FullScreen,
+}
+\usepackage{xepersian}
+\settextfont{XB Niloofar}
+
+\newcommand{\class}{درس مبانی هوش محاسباتی}
+\newcommand{\term}{نیم‌سال دوم ۰۱-۰۲}
+\newcommand{\college}{دانشکده مهندسی کامپیوتر}
+\newcommand{\prof}{استاد: دکتر کارشناس}
+
+\onehalfspacing
+\parindent 0ex
+\begin{document}
+	
+	\include{info}
+	\pagestyle{empty}
+	\include{cover-page}
+	
+	% These commands set up the running header on the top of the exam pages
+	\pagestyle{head}
+	\firstpageheader{}{}{}
+	\runningheader{صفحه \thepage\ از \numpages}{}{\class}
+	\runningheadrule
+	%\begin{tabular}{p{.7\textwidth} l}
+	%\multicolumn{2}{c}{\textbf{به نام خدا}}\\
+	%\multirow{2}{*}{\includegraphics[scale=0.2] {images/logo.png}} & \\ \\
+	%&  \textbf{\class}\\
+	%&  \textbf{\term}\\
+	%&  \textbf{\prof}\\ \\
+	% \textbf{\college} &  \\
+	%\end{tabular}\\
+	
+	%\rule[1ex]{\textwidth}{.1pt}
+	%\textbf{تمرین سری پنجم}
+	
+	%\rule[1ex]{\textwidth}{.1pt}
+	%\makebox[45mm]{\hrulefill}\\
+	\tableofcontents
+	\vspace{1cm}
+	\setcounter{section}{-1}
+	\section{مقدمه}
+	هدف از این تمرین آشنایی بیشتر با الگوریتم‌های ژنتیک و استفاده‌ی بیشتر از آن‌ها در کاربردهای عملی است.
+	
+
+	
+\input{practice1}
+\input{practice2}
+\input{practice3}
+\input{practice4}
+\end{document}
