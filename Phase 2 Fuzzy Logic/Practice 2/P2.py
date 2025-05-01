@@ -7,25 +7,25 @@ import matplotlib.pyplot as plt
 # *****************************
 
 # Domains:
-x_soil = np.arange(0, 101, 1)        # Soil moisture percentage
-x_weather = np.arange(0, 101, 1)     # Weather condition index
-x_irrigation = np.arange(0, 101, 1)  # Irrigation amount percentage
+x_soil = np.arange(0, 101, 1)        # 0-100 %
+x_weather = np.arange(0, 101, 1)     # 0-100 %
+x_irrigation = np.arange(0, 11, 1)  # 0-10 min or litter
 
 # Soil moisture membership functions:
 soil_dry    = fuzz.trapmf(x_soil, [0, 0, 20, 40])
-soil_medium = fuzz.gaussmf(x_soil, 50, 12)
+soil_medium = fuzz.trimf(x_soil, [30, 50, 70])
 soil_wet    = fuzz.trapmf(x_soil, [60, 80, 100, 100])
 
 # Weather condition membership functions:
-weather_sunny  = fuzz.trapmf(x_weather, [0, 0, 30, 50])
-weather_cloudy = fuzz.gaussmf(x_weather, 60, 10)
-weather_rainy  = fuzz.trapmf(x_weather, [50, 70, 100, 100])
+weather_sunny  = fuzz.trapmf(x_weather, [0, 0, 10, 25])
+weather_cloudy = fuzz.trimf(x_weather, [20, 50, 80])
+weather_rainy  = fuzz.trapmf(x_weather, [60, 85, 100, 100])
 
 # Irrigation amount membership functions:
-irrigation_none   = fuzz.trimf(x_irrigation, [0, 0, 15])
-irrigation_low    = fuzz.trimf(x_irrigation, [10, 25, 40])
-irrigation_medium = fuzz.trimf(x_irrigation, [35, 50, 65])
-irrigation_high   = fuzz.trapmf(x_irrigation, [60, 80, 100, 100])
+irrigation_none   = fuzz.trapmf(x_irrigation, [0, 0, 1, 2])
+irrigation_low    = fuzz.trimf(x_irrigation, [1, 3, 4])
+irrigation_medium = fuzz.trimf(x_irrigation, [3, 5, 7])
+irrigation_high   = fuzz.trapmf(x_irrigation, [6, 8, 10, 10])
 
 # *****************************
 # Plot membership functions
@@ -62,7 +62,7 @@ plt.plot(x_irrigation, irrigation_low, label='Low')
 plt.plot(x_irrigation, irrigation_medium, label='Medium')
 plt.plot(x_irrigation, irrigation_high, label='High')
 plt.title('Irrigation Amount Membership Functions')
-plt.xlabel('Irrigation Amount (%)')
+plt.xlabel('Irrigation Amount (min or Lit)')
 plt.ylabel('Membership Degree')
 plt.legend()
 plt.grid()
@@ -148,40 +148,68 @@ for m in methods:
 
 
 # *****************************
-# Part 3: 10-day simulation
+# Part 3: Simulation over time
 # *****************************
-weather_sequence = ['sunny']*4 + ['cloudy']*3 + ['rainy']*3
-weather_loss = {'sunny': 8, 'cloudy': 4, 'rainy': 2}
 
-days = len(weather_sequence)
-soil_history = np.zeros(days+1)
-irrigation_history = np.zeros(days)
-soil_history[0] = 50  # initial soil moisture
+# 1. Define initial conditions and weather sequence for 10 days
+initial_soil = 15  # meghdar avallieh baraye rotubat khaak
+weather_sequence = ['sunny', 'sunny', 'cloudy', 'rainy', 'sunny',
+                    'cloudy', 'rainy', 'sunny', 'cloudy', 'rainy']
 
-for t in range(days):
-    current_soil = soil_history[t]
-    # map weather to numeric index
-    weather_value = {'sunny': 20, 'cloudy': 50, 'rainy': 80}[weather_sequence[t]]
-    mu_s, mu_w = fuzzify_inputs(current_soil, weather_value)
-    agg = infer_irrigation(mu_s, mu_w)
-    irrigation_amount = defuzzify_output(agg, 'centroid')
-    irrigation_history[t] = irrigation_amount
-    # update soil moisture
-    soil_history[t+1] = np.clip(current_soil + 0.5*irrigation_amount - weather_loss[weather_sequence[t]], 0, 100)
+# Mapping from weather label to numeric
+weather_val_map   = {'sunny': 0,   'cloudy': 50,  'rainy': 100}
+effect_map        = {'sunny': -5,  'cloudy': -2,  'rainy': +5}
 
-# Plot results:
-plt.figure(figsize=(8, 5))
-plt.plot(range(days+1), soil_history, marker='o')
+# Histories simulation
+soil_history       = [initial_soil]
+irrigation_history = []
+days               = list(range(1, len(weather_sequence) + 1))
+
+# Run simulation
+print("\nSimulating irrigation in 10 Days:")
+for day, weather_label in zip(days, weather_sequence):
+    current_soil = soil_history[-1]
+    w_val = weather_val_map[weather_label]
+
+    # Fuzzify inputs
+    mu_s, mu_w = fuzzify_inputs(current_soil, w_val)
+    agg   = infer_irrigation(mu_s, mu_w)
+    irr   = defuzzify_output(agg, method='centroid')
+
+    # Record irrigation
+    irrigation_history.append(irr)
+
+    # Update soil moisture: add weather effect and irrigation contribution
+    weather_effect = effect_map[weather_label]
+    new_soil = current_soil + (0.6 * irr) - weather_effect
+    new_soil = np.clip(new_soil, 0, 100)
+    soil_history.append(new_soil)
+
+    print(f"Day {day}: Weather={weather_label}, Soil before={current_soil:.1f}%, "
+          f"Irrigation={irr:.2f}, Soil after={new_soil:.1f}%")
+
+# Plot results
+plt.figure(figsize=(8, 4))
+plt.plot([0] + days, soil_history, marker='o')
 plt.title('Soil Moisture Over Time')
 plt.xlabel('Day')
 plt.ylabel('Soil Moisture (%)')
 plt.grid()
 plt.show()
 
-plt.figure(figsize=(8, 5))
-plt.bar(range(days), irrigation_history)
-plt.title('Daily Irrigation Amount (Centroid Method)')
+plt.figure(figsize=(8, 4))
+plt.bar(days, irrigation_history)
+plt.title('Daily Irrigation Amount')
 plt.xlabel('Day')
-plt.ylabel('Irrigation (%)')
+plt.ylabel('Irrigation (min or L)')
+plt.grid(axis='y')
+plt.show()
+
+soil_values = soil_history[1:]
+plt.figure(figsize=(8, 4))
+plt.bar(days, soil_values)
+plt.title('Daily Soil Moisture')
+plt.xlabel('Day')
+plt.ylabel('Soil Moisture (%)')
 plt.grid(axis='y')
 plt.show()
