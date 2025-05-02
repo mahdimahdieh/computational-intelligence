@@ -7,6 +7,9 @@
 \usepackage{geometry}
 \geometry{top=1.5cm, bottom=2cm, left=2cm, right=2cm}
 \usepackage{xcolor}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{placeins}
 \usepackage{hyperref}
 \usepackage{amsmath}
 \hypersetup{
@@ -54,11 +57,23 @@
 		\mu_{\mathrm{وسط}}\approx0.6,\quad
 		\mu_{\mathrm{بالا}}\approx0.2
 		\]
+		\FloatBarrier 
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.7\textwidth]{5a.jpg}
+			\caption*{شکل ۵-الف: توزیع تابع عضویت برای فشار \(P=1020\,\mathrm{mbar}\)}
+		\end{figure}
 		\item برای نرخ تغییر فشار \(\dot P=-2\,\mathrm{mbar/h}\):
 		\[
 		\mu_{\mathrm{به\ پایین}}\approx0.7,\quad
 		\mu_{\mathrm{ثابت}}\approx0.3
 		\]
+		\FloatBarrier 
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.7\textwidth]{5b.jpg}
+			\caption*{شکل ۵-ب: توزیع تابع عضویت برای نرخ تغییر فشار \(\dot P=-2\,\mathrm{mbar/h}\)}
+		\end{figure}
 		\item با ترکیب درجات عضویت در شروط و ضریب اطمینان قواعد:
 		\[
 		\text{حجم نفوذ هر قاعده} = \min\bigl(\mu_{\text{شرط1}},\mu_{\text{شرط2}}\bigr)\times\text{اعتماد}
