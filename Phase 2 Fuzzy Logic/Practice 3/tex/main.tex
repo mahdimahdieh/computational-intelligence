@@ -1,0 +1,206 @@
+% Exercise Template
+%A LaTeX template for typesetting exercise in Persian (with cover page).
+%By: Zeinab Seifoori
+
+\documentclass[12pt]{exam}
+
+\usepackage{setspace}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Define colors
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+
+% Configure listings style
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize\setLTR,
+	breakatwhitespace=true,         
+	breaklines=true,                 
+	captionpos=top, % Changed to top placement
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2,
+	frame=single,
+	abovecaptionskip=5pt, % Space between caption and code
+	belowcaptionskip=5pt, % Space between code and potential bottom text
+}
+
+
+\lstset{style=mystyle}
+
+% Set Persian caption for listings
+\renewcommand{\lstlistingname}{برنامه}
+
+\usepackage{graphicx,subfigure,wrapfig}
+\usepackage{float} %for floating shapes
+
+\usepackage{multirow}
+%\usepackage{multicol}
+
+
+%%%%%%%%%  for pie chart %%%%%
+\usepackage{pgf-pie}  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%% for qoute block %%%%%
+\usepackage{etoolbox}
+%%%%%%%%%%%%%%%%%%%%%%5
+
+
+\usepackage[margin=20mm]{geometry}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+	pdftitle={Overleaf Example},
+	pdfpagemode=FullScreen,
+}
+\usepackage{xepersian}
+\settextfont{XB Niloofar}
+
+\newcommand{\class}{درس مبانی هوش محاسباتی}
+\newcommand{\term}{نیم‌سال دوم ۰۱-۰۲}
+\newcommand{\college}{دانشکده مهندسی کامپیوتر}
+\newcommand{\prof}{استاد: دکتر کارشناس}
+
+\onehalfspacing
+\parindent 0ex
+\begin{document}
+	
+	\include{info}
+	\pagestyle{empty}
+	\include{cover-page}
+	
+	% These commands set up the running header on the top of the exam pages
+	\pagestyle{head}
+	\firstpageheader{}{}{}
+	\runningheader{صفحه \thepage\ از \numpages}{}{\class}
+	\runningheadrule
+	%\begin{tabular}{p{.7\textwidth} l}
+	%\multicolumn{2}{c}{\textbf{به نام خدا}}\\
+	%\multirow{2}{*}{\includegraphics[scale=0.2] {images/logo.png}} & \\ \\
+	%&  \textbf{\class}\\
+	%&  \textbf{\term}\\
+	%&  \textbf{\prof}\\ \\
+	% \textbf{\college} &  \\
+	%\end{tabular}\\
+	
+	%\rule[1ex]{\textwidth}{.1pt}
+	%\textbf{تمرین سری پنجم}
+	
+	%\rule[1ex]{\textwidth}{.1pt}
+	%\makebox[45mm]{\hrulefill}\\
+	\tableofcontents
+	\vspace{1cm}
+	\setcounter{section}{-1}
+	\newpage
+	\section{چکیده}
+	در این پروژه، یک سیستم منطق فازی برای توصیه شدت و مدت زمان تمرینات ورزشی بر اساس ویژگی‌های فردی طراحی و پیاده‌سازی شد. ورودی‌های سیستم شامل سطح آمادگی جسمانی، سطح انرژی، هدف ورزشی، وزن و سن بود و خروجی‌ها شدت تمرین و مدت زمان آن بودند. با استفاده از \lr{scikit-fuzzy} در زبان \lr{Python}، توابع عضویت و قواعد فازی تعریف شده و نتایج سیستم با چند مثال مختلف آزمایش و تحلیل شد.
+	
+	\section{مقدمه}
+	امروزه استفاده از سیستم‌های هوشمند در حوزه سلامت و ورزش گسترش یافته است. سیستم فازی به دلیل توانایی مدل‌سازی رفتارهای «نرم» و «نامعین» مناسب‌‌ترین گزینه برای توصیه برنامه تمرینی شخصی‌شده است. در این گزارش، اهداف، روش پیاده‌سازی، تعریف متغیرها و قواعد، و نتایج تست‌ها بیان می‌شود.
+	
+	\section{روش پیاده‌سازی}
+	\begin{itemize}
+		
+		\item کتابخانه‌های مورد استفاده: \lr{numpy}, \lr{scikit-fuzzy}, \lr{matplotlib}
+		\item ساختار کد:
+		\begin{enumerate}
+			\item تابع \texttt{define\_variables} برای تعریف متغیرهای فازی و توابع عضویت
+			\item تابع \texttt{define\_rules} برای تعریف قواعد فازی
+			\item تابع \texttt{build\_and\_run\_system} برای اجرای شبیه‌سازی و اعمال شخصی‌سازی
+			\item تابع \texttt{plot\_memberships\_and\_results} برای رسم توابع عضویت و نتایج
+			\item تابع \texttt{main} برای مدیریت ورودی کاربر، اجرای تست‌ها و چاپ نتایج
+		\end{enumerate}
+		\item قابلیت‌های اضافی:
+		\begin{itemize}
+			\item کاهش خودکار شدت تمرین برای افراد با سن بیش تر از 60 سال
+			\item پرسش از کاربر جهت ترجیح شدت بیشتر (ضریب \lr{1.2} بر شدت نهایی)
+			\item نشان دادن نمودار های توابع  عضویت در حالت کلی و پس از محاسبات
+		\end{itemize}
+	\end{itemize}
+	
+	\section{تعریف متغیرهای فازی}
+	\subsection{ورودی‌ها}
+	\begin{itemize}
+		\item \textbf{physical\_fitness} (\lr{0 – 100}): \lr{beginner, intermediate, advanced }
+		\item \textbf{energy} (\lr{0 – 100}): \lr{low, medium, high}  
+		\item \textbf{sports\_goal} (\lr{0 - 2}): \lr{weight\_loss, muscle\_gain, general\_fitness}
+		\item \textbf{weight} (\lr{40 - 120 kg}): \lr{underweight, normal, overweight}  
+		\item \textbf{age} (\lr{15 - 80} سال): \lr{young, middle, elderly} (برای پردازش پس از استنتاج)
+	\end{itemize}
+	
+	\subsection{خروجی‌ها}
+	\begin{itemize}
+		\item \textbf{exercise\_intensity} (\lr{0 - 100}): \lr{low, medium, high}  
+		\item \textbf{exercise\_time} (\lr{0 – 120} دقیقه): \lr{short, medium, long}  
+	\end{itemize}
+	
+	توابع عضویت هر متغیر به صورت مثلثی (\lr{trimf}) و با بازه‌های هم‌پوشان تعریف شده تا نرمی تصمیم‌گیری حفظ شود.
+	
+	\section{قواعد فازی}
+	در مجموع ۷ قانون فازی به شرح زیر تعریف شده‌اند:
+	\begin{enumerate}
+		\item اگر سطح آمادگی جسمانی \textbf{beginner} و سطح انرژی \textbf{low} باشد،  
+		آنگاه شدت \textbf{low} و مدت \textbf{short}.
+		\item اگر سطح آمادگی جسمانی \textbf{beginner} و سطح انرژی \textbf{medium} باشد،  
+		آنگاه شدت \textbf{low} و مدت \textbf{medium}.
+		\item اگر سطح آمادگی جسمانی \textbf{intermediate} و سطح انرژی \textbf{high} باشد،  
+		آنگاه شدت \textbf{medium} و مدت \textbf{medium}.
+		\item اگر سطح آمادگی جسمانی \textbf{advanced} و سطح انرژی \textbf{high} باشد،  
+		آنگاه شدت \textbf{high} و مدت \textbf{long}.
+		\item اگر هدف ورزشی \textbf{weight\_loss} و سطح انرژی \textbf{high} باشد،  
+		آنگاه شدت \textbf{medium} و مدت \textbf{long}.
+		\item اگر وزن \textbf{overweight} و هدف ورزشی \textbf{weight\_loss} باشد،  
+		آنگاه مدت \textbf{long}.
+		\item اگر هدف ورزشی \textbf{muscle\_gain} و سطح آمادگی جسمانی \textbf{advanced} باشد،  
+		آنگاه شدت \textbf{high}.
+	\end{enumerate}
+	
+	\section{نتایج تست‌ها}
+	برای مثال های زیر اجرا و محاسبات انجام شد و خروجی‌ها به‌صورت میانگین نهایی گزارش گردید:
+	
+	\begin{itemize}
+		\item ورودی:
+		\lr{\{physical\_fitness=20, energy=30, sports\_goal=0, age=25, weight=65\}}\\
+		خروجی:
+		\lr{intensity=16.2، time=22.5 minutes}
+		\item ورودی:
+		\lr{\{physical\_fitness=70, energy=80, sports\_goal=1, age=30, weight=75\}}\\
+		خروجی:
+		\lr{intensity=92.1، time=83.7 minutes}
+		\item ورودی:
+		\lr{\{physical\_fitness=40, energy=50, sports\_goal=0, age=65, weight=80\}}\\
+		خروجی:
+		\lr{intensity=20.3، time=57.9 minutes}
+		\item ورودی:
+		\lr{\{physical\_fitness=90, energy=90, sports\_goal=2, age=40, weight=60\}}\\
+		خروجی:
+		\lr{intensity=88.4، time=102.3 minutes}
+		\item ورودی: 
+		\lr{\{physical\_fitness=30, energy=20, sports\_goal=0, age=70, weight=90\}}\\
+		خروجی:
+		\lr{intensity=12.6، time=35.2}
+	\end{itemize}
+	
+	خروجی‌ها باشرایط هر فرد و نیازهای تمرینی وی همخوانی مناسبی دارند. به‌خصوص کاهش شدت برای افراد مسن و در صورت تمایل کاربر به تمرین شدیدتر، شدت نهایی افزایش می‌یابد این عمل از کاربر در ترمنینال پرسیده می شود.
+	
+	\section{نتیجه‌گیری}
+	این سیستم فازی توانست برای ترکیب‌های مختلف ویژگی‌های فردی، شدت و زمان تمرین منطقی ارائه دهد. منطق فازی با توابع عضویت مثلثی و قواعد ساده توانایی مدل‌سازی نرمی تصمیم‌گیری را دارد. توابع عضویت را می توان با استفاده از داده های آماری و شرایط هر منطقه خصوصی سازی و بر اساس داده‌های واقعی تنظیم کرد.
+
+\end{document}

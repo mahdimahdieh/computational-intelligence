@@ -1,0 +1,132 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{xepersian}
+% تنظیم قلم اصلی فارسی
+\settextfont{XB Niloofar}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{caption}
+
+\title{گزارش جامع پیاده‌سازی کنترل فازی سیستم آبیاری}
+\author{[نام دانشجو]}
+\date{1403/...}
+
+\begin{document}
+	\maketitle
+	
+	\section{مقدمه}
+	در این گزارش، پیاده‌سازی یک سیستم کنترل فازی برای آبیاری هوشمند خاک بررسی می‌شود. هدف، نگه‌داشتن رطوبت خاک در محدوده بهینه با توجه به شرایط جوی متغیر است.
+	
+	\section{پیاده‌سازی}
+	
+	\subsection{تعریف توابع عضویت}
+	برای ورودی‌های \lr{Soil Moisture} (رطوبت خاک)، \lr{Weather Condition} (شرایط جوی) و خروجی \lr{Irrigation Amount} (مقدار آبیاری)، از توابع عضویت تراپزوییدی و مثلثی کتابخانه \lr{scikit-fuzzy} استفاده شد:
+	\begin{itemize}
+		\item رطوبت خاک:
+		\begin{itemize}
+			\item خشک: \lr{trapmf([0,0,20,40])}
+			\item متوسط: \lr{trimf([30,50,70])}
+			\item مرطوب: \lr{trapmf([60,80,100,100])}
+		\end{itemize}
+		\item شرایط جوی:
+		\begin{itemize}
+			\item آفتابی: \lr{trapmf([0,0,10,25])}
+			\item ابری: \lr{trimf([20,50,80])}
+			\item بارانی: \lr{trapmf([60,85,100,100])}
+		\end{itemize}
+		\item مقدار آبیاری:
+		\begin{itemize}
+			\item بدون آب: \lr{trapmf([0,0,1,2])}
+			\item کم: \lr{trimf([1,3,4])}
+			\item متوسط: \lr{trimf([3,5,7])}
+			\item زیاد: \lr{trapmf([6,8,10,10])}
+		\end{itemize}
+	\end{itemize}
+	
+	\begin{figure}[h]
+		\centering
+		% تصویر توابع عضویت رطوبت خاک
+		\fbox{\parbox[b][4cm][c]{0.8\textwidth}{\centering \textbf{تصویر توابع عضویت رطوبت خاک}}}
+		\caption{توابع عضویت رطوبت خاک}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		% تصویر توابع عضویت شرایط جوی
+		\fbox{\parbox[b][4cm][c]{0.8\textwidth}{\centering \textbf{تصویر توابع عضویت شرایط جوی}}}
+		\caption{توابع عضویت شرایط جوی}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		% تصویر توابع عضویت مقدار آبیاری
+		\fbox{\parbox[b][4cm][c]{0.8\textwidth}{\centering \textbf{تصویر توابع عضویت مقدار آبیاری}}}
+		\caption{توابع عضویت مقدار آبیاری}
+	\end{figure}
+	
+	\subsection{تعریف و استنتاج قواعد فازی}
+	در اینجا نه قاعده فازی به کار رفته است:
+	\begin{enumerate}
+		\item اگر خاک \textbf{خشک} و هوا \textbf{آفتابی} باشد، مقدار آب \textbf{زیاد} است.
+		\item اگر خاک \textbf{خشک} و هوا \textbf{ابری} باشد، مقدار آب \textbf{متوسط} است.
+		\item اگر خاک \textbf{خشک} و هوا \textbf{بارانی} باشد، مقدار آب \textbf{کم} است.
+		\item اگر خاک \textbf{متوسط} و هوا \textbf{آفتابی} باشد، مقدار آب \textbf{متوسط} است.
+		\item اگر خاک \textbf{متوسط} و هوا \textbf{ابری} باشد، مقدار آب \textbf{کم} است.
+		\item اگر خاک \textbf{متوسط} و هوا \textbf{بارانی} باشد، \textbf{بدون آب} است.
+		\item اگر خاک \textbf{مرطوب} و هوا \textbf{آفتابی} باشد، مقدار آب \textbf{کم} است.
+		\item اگر خاک \textbf{مرطوب} و هوا \textbf{ابری} باشد، \textbf{بدون آب} است.
+		\item اگر خاک \textbf{مرطوب} و هوا \textbf{بارانی} باشد، \textbf{بدون آب} است.
+	\end{enumerate}
+	
+	برای استنتاج از عملگر \lr{min} برای \lr{AND} و \lr{max} برای ترکیب نتایج استفاده شد. سپس همه مقادیر قطع‌شده خروجی با \lr{max} تجمیع گردید.
+	
+	\subsection{خروجی (Defuzzification)}
+	روش اصلی خروجی‌گیری، \textbf{مرکز ثقل (Centroid)} بود. همچنین برای مقایسه از چهار روش دیگر \lr{mom}، \lr{lom}، \lr{som} و \lr{bisector} استفاده شد.
+	
+	\section{نتایج آزمایش‌ها}
+	
+	\subsection{مقایسه روش‌های Defuzzification (ورودی نمونه)}
+	برای ورودی نمونه با مقدار رطوبت خاک \(30\%\) و شرایط جوی \(40\%\)، نتایج defuzzification به صورت جدول زیر به دست آمد:
+	
+	\begin{table}[h]
+		\centering
+		\caption{نتایج مقایسه روش‌های Defuzzification}
+		\begin{tabular}{lc}
+			\hline
+			روش & مقدار خروجی \\
+			\hline
+			Centroid & 5.00 \\
+			Mean of maxima (MoM) & 5.00 \\
+			Largest of maxima (LoM) & 6.00 \\
+			Smallest of maxima (SoM) & 4.00 \\
+			Bisector & 5.00 \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	\subsection{شبیه‌سازی 10 روزه}
+	برای ارزیابی عملکرد سیستم، شبیه‌سازی 10 روزه با شرایط اولیه زیر انجام شد:
+	\begin{itemize}
+		\item رطوبت اولیه خاک: \(15\%\)
+		\item توالی روزانه جوی: آفتابی، آفتابی، ابری، بارانی، آفتابی، ابری، بارانی، آفتابی، ابری، بارانی
+	\end{itemize}
+	
+	اثر جوی: آفتابی \(-5\%\)، ابری \(-2\%\)، بارانی \(+5\%\).
+	
+	\begin{figure}[h]
+		\centering
+		% نمودار شبیه‌سازی رطوبت خاک
+		\fbox{\parbox[b][4cm][c]{0.8\textwidth}{\centering \textbf{نمودار شبیه‌سازی رطوبت خاک}}}
+		\caption{رطوبت خاک در طول 10 روز شبیه‌سازی}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		% نمودار مقدار آبیاری روزانه
+		\fbox{\parbox[b][4cm][c]{0.8\textwidth}{\centering \textbf{نمودار مقدار آبیاری روزانه}}}
+		\caption{مقدار آبیاری روزانه در شبیه‌سازی}
+	\end{figure}
+	
+	\section{نتیجه‌گیری}
+	در این پروژه با استفاده از منطق فازی، توابع عضویت و قواعد مناسب، سیستم کنترل آبیاری پیاده‌سازی شد. نتایج defuzzification و شبیه‌سازی نشان دادند که سیستم قادر است رطوبت خاک را در شرایط جوی مختلف در سطح بهینه حفظ کند.
+	
+\end{document}
