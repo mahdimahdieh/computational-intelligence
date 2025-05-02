@@ -108,16 +108,13 @@ def plot_memberships_and_results(pf, en, sg, ag, wt, ei, et, sim=None):
     # Plot membership functions and crisp outputs
     for var in [pf, en, sg, ag, wt, ei, et]:
         var.view()
-        plt.savefig(f'{var.label}_mf.png')
 
     if sim:
         ei.view(sim=sim)
         plt.plot([sim.output['exercise_intensity']] * 2, [0, 1], 'k--')
-        plt.savefig('intensity_result.png')
 
         et.view(sim=sim)
         plt.plot([sim.output['exercise_time']] * 2, [0, 1], 'k--')
-        plt.savefig('time_result.png')
 
 
 def main():
