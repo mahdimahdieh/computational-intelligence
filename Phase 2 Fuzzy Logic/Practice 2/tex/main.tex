@@ -109,98 +109,123 @@
 	\vspace{1cm}
 	\setcounter{section}{-1}
 	\newpage
-	\section{چکیده}
-	در این پروژه، یک سیستم منطق فازی برای توصیه شدت و مدت زمان تمرینات ورزشی بر اساس ویژگی‌های فردی طراحی و پیاده‌سازی شد. ورودی‌های سیستم شامل سطح آمادگی جسمانی، سطح انرژی، هدف ورزشی، وزن و سن بود و خروجی‌ها شدت تمرین و مدت زمان آن بودند. با استفاده از \lr{scikit-fuzzy} در زبان \lr{Python}، توابع عضویت و قواعد فازی تعریف شده و نتایج سیستم با چند مثال مختلف آزمایش و تحلیل شد.
-	
 	\section{مقدمه}
-	امروزه استفاده از سیستم‌های هوشمند در حوزه سلامت و ورزش گسترش یافته است. سیستم فازی به دلیل توانایی مدل‌سازی رفتارهای «نرم» و «نامعین» مناسب‌‌ترین گزینه برای توصیه برنامه تمرینی شخصی‌شده است. در این گزارش، اهداف، روش پیاده‌سازی، تعریف متغیرها و قواعد، و نتایج تست‌ها بیان می‌شود.
+	در این گزارش، پیاده‌سازی یک سیستم کنترل فازی برای آبیاری هوشمند خاک بررسی می‌شود. هدف، نگه‌داشتن رطوبت خاک در محدوده بهینه با توجه به شرایط جوی متغیر است.
 	
-	\section{روش پیاده‌سازی}
+	\section{پیاده‌سازی}
+	
+	\subsection{تعریف توابع عضویت}
+	برای ورودی‌های \lr{Soil Moisture} (رطوبت خاک)، \lr{Weather Condition} (شرایط جوی) و خروجی \lr{Irrigation Amount} (مقدار آبیاری)، از توابع عضویت مثلثی، ذوزنقه ای و گاوسی کتابخانه \lr{scikit-fuzzy} استفاده شد:
+	\newline
 	\begin{itemize}
-		
-		\item کتابخانه‌های مورد استفاده: \lr{numpy}, \lr{scikit-fuzzy}, \lr{matplotlib}
-		\item ساختار کد:
-		\begin{enumerate}
-			\item تابع \texttt{define\_variables} برای تعریف متغیرهای فازی و توابع عضویت
-			\item تابع \texttt{define\_rules} برای تعریف قواعد فازی
-			\item تابع \texttt{build\_and\_run\_system} برای اجرای شبیه‌سازی و اعمال شخصی‌سازی
-			\item تابع \texttt{plot\_memberships\_and\_results} برای رسم توابع عضویت و نتایج
-			\item تابع \texttt{main} برای مدیریت ورودی کاربر، اجرای تست‌ها و چاپ نتایج
-		\end{enumerate}
-		\item قابلیت‌های اضافی:
+		\item رطوبت خاک:
 		\begin{itemize}
-			\item کاهش خودکار شدت تمرین برای افراد با سن بیش تر از 60 سال
-			\item پرسش از کاربر جهت ترجیح شدت بیشتر (ضریب \lr{1.2} بر شدت نهایی)
-			\item نشان دادن نمودار های توابع  عضویت در حالت کلی و پس از محاسبات
+			\item خشک: \lr{trapmf([0,0,20,40])}
+			\item متوسط: \lr{trimf([30,50,70])}
+			\item مرطوب: \lr{trapmf([60,80,100,100])}
+		\end{itemize}
+		\item شرایط جوی:
+		\begin{itemize}
+			\item آفتابی: \lr{trapmf([0,0,10,25])}
+			\item ابری: \lr{trimf([20,50,80])}
+			\item بارانی: \lr{trapmf([60,85,100,100])}
+		\end{itemize}
+		\item مقدار آبیاری:
+		\begin{itemize}
+			\item بدون آب: \lr{trapmf([0,0,1,2])}
+			\item کم: \lr{trimf([1,3,4])}
+			\item متوسط: \lr{trimf([3,5,7])}
+			\item زیاد: \lr{trapmf([6,8,10,10])}
 		\end{itemize}
 	\end{itemize}
 	
-	\section{تعریف متغیرهای فازی}
-	\subsection{ورودی‌ها}
-	\begin{itemize}
-		\item \textbf{physical\_fitness} (\lr{0 – 100}): \lr{beginner, intermediate, advanced }
-		\item \textbf{energy} (\lr{0 – 100}): \lr{low, medium, high}  
-		\item \textbf{sports\_goal} (\lr{0 - 2}): \lr{weight\_loss, muscle\_gain, general\_fitness}
-		\item \textbf{weight} (\lr{40 - 120 kg}): \lr{underweight, normal, overweight}  
-		\item \textbf{age} (\lr{15 - 80} سال): \lr{young, middle, elderly} (برای پردازش پس از استنتاج)
-	\end{itemize}
-	
-	\subsection{خروجی‌ها}
-	\begin{itemize}
-		\item \textbf{exercise\_intensity} (\lr{0 - 100}): \lr{low, medium, high}  
-		\item \textbf{exercise\_time} (\lr{0 – 120} دقیقه): \lr{short, medium, long}  
-	\end{itemize}
-	
-	توابع عضویت هر متغیر به صورت مثلثی (\lr{trimf}) و با بازه‌های هم‌پوشان تعریف شده تا نرمی تصمیم‌گیری حفظ شود.
-	
-	\section{قواعد فازی}
-	در مجموع ۷ قانون فازی به شرح زیر تعریف شده‌اند:
+	\newpage
+	\subsection{تعریف و استنتاج قواعد فازی}
+	در اینجا نه قاعده فازی به کار رفته است:
 	\begin{enumerate}
-		\item اگر سطح آمادگی جسمانی \textbf{beginner} و سطح انرژی \textbf{low} باشد،  
-		آنگاه شدت \textbf{low} و مدت \textbf{short}.
-		\item اگر سطح آمادگی جسمانی \textbf{beginner} و سطح انرژی \textbf{medium} باشد،  
-		آنگاه شدت \textbf{low} و مدت \textbf{medium}.
-		\item اگر سطح آمادگی جسمانی \textbf{intermediate} و سطح انرژی \textbf{high} باشد،  
-		آنگاه شدت \textbf{medium} و مدت \textbf{medium}.
-		\item اگر سطح آمادگی جسمانی \textbf{advanced} و سطح انرژی \textbf{high} باشد،  
-		آنگاه شدت \textbf{high} و مدت \textbf{long}.
-		\item اگر هدف ورزشی \textbf{weight\_loss} و سطح انرژی \textbf{high} باشد،  
-		آنگاه شدت \textbf{medium} و مدت \textbf{long}.
-		\item اگر وزن \textbf{overweight} و هدف ورزشی \textbf{weight\_loss} باشد،  
-		آنگاه مدت \textbf{long}.
-		\item اگر هدف ورزشی \textbf{muscle\_gain} و سطح آمادگی جسمانی \textbf{advanced} باشد،  
-		آنگاه شدت \textbf{high}.
+		\item اگر خاک \textbf{خشک} و هوا \textbf{آفتابی} باشد، مقدار آب \textbf{زیاد} است.
+		\item اگر خاک \textbf{خشک} و هوا \textbf{ابری} باشد، مقدار آب \textbf{متوسط} است.
+		\item اگر خاک \textbf{خشک} و هوا \textbf{بارانی} باشد، مقدار آب \textbf{کم} است.
+		\item اگر خاک \textbf{متوسط} و هوا \textbf{آفتابی} باشد، مقدار آب \textbf{متوسط} است.
+		\item اگر خاک \textbf{متوسط} و هوا \textbf{ابری} باشد، مقدار آب \textbf{کم} است.
+		\item اگر خاک \textbf{متوسط} و هوا \textbf{بارانی} باشد، \textbf{بدون آب} است.
+		\item اگر خاک \textbf{مرطوب} و هوا \textbf{آفتابی} باشد، مقدار آب \textbf{کم} است.
+		\item اگر خاک \textbf{مرطوب} و هوا \textbf{ابری} باشد، \textbf{بدون آب} است.
+		\item اگر خاک \textbf{مرطوب} و هوا \textbf{بارانی} باشد، \textbf{بدون آب} است.
 	\end{enumerate}
 	
-	\section{نتایج تست‌ها}
-	برای مثال های زیر اجرا و محاسبات انجام شد و خروجی‌ها به‌صورت میانگین نهایی گزارش گردید:
+	برای استنتاج  از استنتاج ممدانی استفاده شده است. از عملگر \lr{min} برای \lr{AND} و \lr{max} برای ترکیب نتایج استفاده شد. سپس همه مقادیر قطع‌شده خروجی با \lr{max} تجمیع گردید.
 	
+	\subsection{خروجی (Defuzzification)}
+	روش اصلی خروجی‌گیری، \textbf{مرکز ثقل (Centroid)} بود. همچنین برای مقایسه از چهار روش دیگر \lr{mom}، \lr{lom}، \lr{som} و \lr{bisector} استفاده شد.
+	
+	\section{نتایج آزمایش‌ها}
+	
+	\subsection{مقایسه روش‌های Defuzzification (ورودی نمونه)}
+	برای ورودی نمونه با مقدار رطوبت خاک \(30\%\) و شرایط جوی \(40\%\)، نتایج defuzzification به صورت جدول زیر به دست آمد:
+	
+	\begin{table}[h]
+		\centering
+		\caption{نتایج مقایسه روش‌های Defuzzification}
+		\begin{tabular}{lc}
+			\hline
+			روش & مقدار خروجی \\
+			\hline
+			Centroid & 5.00 \\
+			Mean of maxima (MoM) & 5.00 \\
+			Largest of maxima (LoM) & 6.00 \\
+			Smallest of maxima (SoM) & 4.00 \\
+			Bisector & 5.00 \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	\subsection{شبیه‌سازی 10 روزه}
+	برای ارزیابی عملکرد سیستم، شبیه‌سازی 10 روزه با شرایط اولیه زیر انجام شد:
 	\begin{itemize}
-		\item ورودی:
-		\lr{\{physical\_fitness=20, energy=30, sports\_goal=0, age=25, weight=65\}}\\
-		خروجی:
-		\lr{intensity=16.2، time=22.5 minutes}
-		\item ورودی:
-		\lr{\{physical\_fitness=70, energy=80, sports\_goal=1, age=30, weight=75\}}\\
-		خروجی:
-		\lr{intensity=92.1، time=83.7 minutes}
-		\item ورودی:
-		\lr{\{physical\_fitness=40, energy=50, sports\_goal=0, age=65, weight=80\}}\\
-		خروجی:
-		\lr{intensity=20.3، time=57.9 minutes}
-		\item ورودی:
-		\lr{\{physical\_fitness=90, energy=90, sports\_goal=2, age=40, weight=60\}}\\
-		خروجی:
-		\lr{intensity=88.4، time=102.3 minutes}
-		\item ورودی: 
-		\lr{\{physical\_fitness=30, energy=20, sports\_goal=0, age=70, weight=90\}}\\
-		خروجی:
-		\lr{intensity=12.6، time=35.2}
+		\item رطوبت اولیه خاک: \(15\%\)
+		\item توالی روزانه جوی: آفتابی، آفتابی، ابری، بارانی، آفتابی، ابری، بارانی، آفتابی، ابری، بارانی
 	\end{itemize}
 	
-	خروجی‌ها باشرایط هر فرد و نیازهای تمرینی وی همخوانی مناسبی دارند. به‌خصوص کاهش شدت برای افراد مسن و در صورت تمایل کاربر به تمرین شدیدتر، شدت نهایی افزایش می‌یابد این عمل از کاربر در ترمنینال پرسیده می شود.
+	اثر جوی: آفتابی \(-5\%\)، ابری \(-2\%\)، بارانی \(+5\%\).
 	
+
 	\section{نتیجه‌گیری}
-	این سیستم فازی توانست برای ترکیب‌های مختلف ویژگی‌های فردی، شدت و زمان تمرین منطقی ارائه دهد. منطق فازی با توابع عضویت مثلثی و قواعد ساده توانایی مدل‌سازی نرمی تصمیم‌گیری را دارد. توابع عضویت را می توان با استفاده از داده های آماری و شرایط هر منطقه خصوصی سازی و بر اساس داده‌های واقعی تنظیم کرد.
+	در این پروژه با استفاده از منطق فازی، توابع عضویت و قواعد مناسب، سیستم کنترل آبیاری پیاده‌سازی شد. نتایج defuzzification و شبیه‌سازی نشان دادند که سیستم قادر است رطوبت خاک را در شرایط جوی مختلف در سطح بهینه حفظ کند.
+	
+	\section{نمودار ها}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.8\textwidth]{soil_membership.png}
+		\caption{توابع عضویت رطوبت خاک}
+		\label{fig:soil_membership}
+	\end{figure}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.8\textwidth]{weather_membership.png}
+		\caption{توابع عضویت شرایط جوی}
+		\label{fig:weather_membership}
+	\end{figure}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.8\textwidth]{irrigation_membership.png}
+		\caption{توابع عضویت مقدار آبیاری}
+		\label{fig:irrigation_membership}
+	\end{figure}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.8\textwidth]{soil_simulation.png}
+		\caption{رطوبت خاک در طول 10 روز شبیه‌سازی}
+		\label{fig:soil_simulation}
+	\end{figure}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.8\textwidth]{irrigation_simulation.png}
+		\caption{مقدار آبیاری روزانه در شبیه‌سازی}
+		\label{fig:irrigation_simulation}
+	\end{figure}
+	
+	
 
 \end{document}
