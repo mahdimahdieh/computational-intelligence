@@ -108,4 +108,176 @@
 		
 	\end{enumerate}
 	
+	
+	
+	%%%%%%%%%%%% سوال ۶ %%%%%%%%%%%
+	\item 
+	
+	\begin{enumerate}
+		\item {\bf طراحی پرسپترون تک‌لایه}
+		
+		فرض کنیم می‌خواهیم الگوها را به صورت برچسب
+		\(\;t_1=-1\) برای \(P_1\) و \(t_2=+1\) برای \(P_2\) دسته‌بندی کنیم.
+		باید \(w\in\mathbb{R}^3\) و بایاس \(b\) را طوری بیابیم که
+		\[
+		\begin{cases}
+			\operatorname{sign}(w^\top P_1 + b) = -1,\\
+			\operatorname{sign}(w^\top P_2 + b) = +1.
+		\end{cases}
+		\]
+		این معادلات به صورت نابرابری‌های زیر نوشته می‌شوند:
+		\[
+		w^\top\!(-1,-1,1) + b < 0,
+		\quad
+		w^\top\!(+1,-1,1) + b > 0.
+		\]
+		به سادگی می‌توانیم مثلاً وزن‌ها را به صورت
+		\(\;w = (1,0,0)\;\)، و بایاس \(b=0\) انتخاب کنیم:
+		\[
+		w^\top P_1 + b = -1 < 0,\quad
+		w^\top P_2 + b = +1 > 0.
+		\]
+		لذا تابع تصمیم
+		\(\;y = \operatorname{sign}(x_1)\)
+		دو الگو را به درستی تفکیک می‌کند.
+		
+		\item {\bf طراحی شبکه Hamming}
+		
+		شبکه همینگ برای \(N\) الگو \(P_k\) به صورت زیر است:
+		\[
+		\textbf{W} = 
+		\begin{bmatrix}
+			P_1^\top \\ P_2^\top
+		\end{bmatrix}, 
+		\quad
+		y = \arg\max_{k}\bigl(\textbf{W}\,x\bigr)_k.
+		\]
+		برای \(P_1,P_2\) داریم:
+		\[
+		\textbf{W} =
+		\begin{pmatrix}
+			-1 & -1 & 1\\
+			+1 & -1 & 1
+		\end{pmatrix},
+		\quad
+		\text{انتخاب \(k\) با بیشینه‌ی \(\sum_i W_{k,i}x_i\).}
+		\]
+		
+		\item {\bf طراحی شبکه Hopfield}
+		
+		شبکه هاپفیلد با الگوهای باینری \(\pm1\) به کمک قاعده
+		\(\;T = \sum_k P_k P_k^\top\;\) ساخته می‌شود. اینجا داریم:
+		\[
+		T \;=\; P_1P_1^\top + P_2P_2^\top
+		\;=\;
+		\begin{pmatrix}
+			1 & 1 & -1\\
+			1 & 1 & -1\\
+			-1 & -1 & 1
+		\end{pmatrix}
+		+
+		\begin{pmatrix}
+			1 & -1 & 1\\
+			-1 & 1 & -1\\
+			1 & -1 & 1
+		\end{pmatrix}
+		=
+		\begin{pmatrix}
+			2 & 0 & 0\\
+			0 & 2 & -2\\
+			0 & -2 & 2
+		\end{pmatrix}.
+		\]
+		سپس حالت نرونی‌ها با قاعده
+		\(\;x_i \leftarrow \operatorname{sign}\bigl(\sum_j T_{ij}x_j\bigr)\;\)
+		به سمت نزدیک‌ترین الگو جذب می‌شود.
+		
+	\end{enumerate}
+	
+	%%%%%% سوال ۷ %%%%%%%
+	\item
+	
+	\begin{enumerate}
+		\item 
+		\textbf{طراحی مرز تصمیم و شبکه پرسپترون تک‌لایه}
+		
+		
+		با انتخاب وزن‌ها و بایاس زیر:
+		\[
+		\mathbf{w} = \begin{bmatrix}-1\\-1\end{bmatrix},
+		\quad b = \frac{1}{2}
+		\]
+		تابع فعال‌سازی گام به این صورت خواهد بود:
+		\[
+		y = 
+		\begin{cases}
+			1, & \mathbf{w}^\top \mathbf{x} + b > 0,\\
+			0, & \text{وگرنه}.
+		\end{cases}
+		\]
+		\\
+		\textbf{معادله مرز تصمیم:}
+		\[
+		-x_1 - x_2 + \frac{1}{2} = 0
+		\quad\Longleftrightarrow\quad
+		x_1 + x_2 = \frac{1}{2}.
+		\]
+		
+		\begin{center}
+			\begin{tikzpicture}[scale=1]
+				\draw[->] (-2,0) -- (3,0) node[right] {$x_1$};
+				\draw[->] (0,-2) -- (0,3) node[above] {$x_2$};
+				% نقاط مثبت
+				\fill ( -1,  1) circle[radius=2pt] node[above left] {$P_1$};
+				\fill (  0,  0) circle[radius=2pt] node[below right] {$P_2$};
+				\fill (  1, -1) circle[radius=2pt] node[below right] {$P_3$};
+				% نقاط منفی
+				\draw[fill=white] ( 1, 0) circle[radius=2pt] node[below right] {$P_4$};
+				\draw[fill=white] ( 0, 1) circle[radius=2pt] node[above left] {$P_5$};
+				\draw[fill=white] ( 1, 2) circle[radius=2pt] node[right] {$P_6$};
+				% مرز تصمیم
+				\draw[thick,blue] (-1.5,2) -- (2,-1.5) node[right] {$x_1 + x_2 = \frac{1}{2}$};
+			\end{tikzpicture}
+		\end{center}
+		
+		\item 
+		\textbf{تشخیص قابلیت جداسازی و تعیین بازه \(\varepsilon\)}
+		
+		از‌ نامعادلات زیر برای کلاس بندی استفاده می‌کنیم:
+		\[
+		\begin{cases}
+			-x_1 - x_2 + b > 0 & 1\\
+			-x_1 - x_2 + b < 0 & 0
+		\end{cases}
+		\]
+		نتیجه می‌شود که برای هر \(\varepsilon\ge0\) می‌توان \(w_1=w_2=-1\) و \(b\in(0,1)\) (مثلاً \(b=1\)) را انتخاب کرد و جداسازی خطی امکان‌پذیر است.
+		
+		\item 
+		\textbf{اجرای الگوریتم پرسپترون و نتایج نهایی}
+		
+		برای سه مقدار \(\varepsilon\) اجرای الگوریتم با نرخ یادگیری \(\eta=1\)، وزن و بایاس را از صفر مقداردهی کرده و تا خطای صفر تکرار می‌کنیم.
+		
+		\lstinputlisting[language=Python, caption= پیاده‌سازی الگوریتم پرسپترون]{scripts/epsilon.py}
+
+		
+		{\small
+			\[
+			\begin{aligned}
+				&\varepsilon=1:\quad \mathbf{w}=(-1,\,-1),\; b=1,\;\text{epochs}=2,\\
+				&\varepsilon=2:\quad \mathbf{w}=(-2,\,-2),\; b=1,\;\text{epochs}=4,\\
+				&\varepsilon=6:\quad \mathbf{w}=(-3,\,-4),\; b=3,\;\text{epochs}=4.
+			\end{aligned}
+			\]}
+		
+		\item 
+		\textbf{خلاصه نتایج}
+		
+		\begin{itemize}
+			\item مرز تصمیم: \(x_1 + x_2 = \frac{1}{2}\).
+			\item بازه \(\varepsilon\): \(\varepsilon \ge 0\) (تمام مقادیر غیرمنفی).
+			\item وزن‌ها و بایاس نهایی برای \(\varepsilon=1,2,6\) مطابق جدول فوق.
+			\item الگوریتم پرسپترون حداکثر تا ۴ دور همگرا شده و خطای صفر حاصل شد.
+		\end{itemize}
+		
+	\end{enumerate}
 \end{enumerate}
