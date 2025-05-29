@@ -36,7 +36,7 @@ def load_and_preprocess(positive_class=0):
     y_train = y_train.flatten()
     y_test = y_test.flatten()
 
-    # Binary label: airplane=1, other=0
+    #airplane=1, other=0
     y_train_bin = (y_train == positive_class).astype(int)
     y_test_bin = (y_test == positive_class).astype(int)
 
@@ -62,7 +62,7 @@ def _compute_loss(y_true, y_pred):
 
 class LogisticRegression:
     def __init__(self, input_dim, lr=0.01, n_iters=2000, print_cost=False):
-        self.W = np.random.randn(input_dim) * 0.01  # **Small** random weights
+        self.W = np.random.randn(input_dim) * 0.01  
         self.b = 0.0
         self.lr = lr
         self.n_iters = n_iters
@@ -78,17 +78,17 @@ class LogisticRegression:
 
         for i in range(self.n_iters):
             # forward
-            z = X.dot(self.W) + self.b  # (m,)
-            a = self.sigmoid(z)  # (m,)
+            z = X.dot(self.W) + self.b  
+            a = self.sigmoid(z)  
 
             # loss
             loss = _compute_loss(y, a)
             self.losses.append(loss)
 
             # gradients
-            dz = a - y  # (m,)
-            dw = (1 / m) * X.T.dot(dz)  # (features,)
-            db = (1 / m) * np.sum(dz)  # scalar
+            dz = a - y 
+            dw = (1 / m) * X.T.dot(dz)  
+            db = (1 / m) * np.sum(dz)  
 
             # update
             self.W -= self.lr * dw
