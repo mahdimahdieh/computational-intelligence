@@ -1,6 +1,6 @@
 import cupy as cp
 
-# Abstract Activation function
+# Abstract Activation Function
 class ActivationFunction:
     def activate(self, x):
         raise NotImplementedError
@@ -8,7 +8,7 @@ class ActivationFunction:
     def derivative(self, x):
         raise NotImplementedError
 
-# Sigmoid Activation function
+# Sigmoid Activation Function
 class Sigmoid(ActivationFunction):
     def activate(self, x):
         return 1 / (1 + cp.exp(-x))
@@ -18,8 +18,22 @@ class Sigmoid(ActivationFunction):
         s = self.activate(x)
         return s * (1 - s)  # Derivative of sigmoid
 
+# Softmax Activation Function
+class Softmax(ActivationFunction):
+    def activate(self, x):
+        e_x = cp.exp(x - cp.max(x, axis=1, keepdims=True))  # Numerically stable softmax
+        return e_x / cp.sum(e_x, axis=1, keepdims=True)  # Normalize to probabilities
 
-# Abstract Loss Function
+    def derivative(self, x):
+        """
+        Derivative of softmax function is very complex:
+        https://medium.com/data-science/derivative-of-the-softmax-function-and-the-categorical-cross-entropy-loss-ffceefc081d1
+        Since it used only in the output, we leave it as it is.
+        """
+        return 1
+
+
+# Abstract Loss Function + Prediction + Gradient
 class ClassificationTask:
     def __init__(self,x_batch, y_batch, output):
         self.x_batch = x_batch
@@ -49,6 +63,23 @@ class BinaryClassification(ClassificationTask):
     def calculate_gradient(self):
         return (self.output - self.y_batch.reshape(-1, 1)) / self.x_batch.shape[0]
 
+class CategoricalClassification(ClassificationTask):
+    def __init__(self, x_batch, y_batch, output):
+        super().__init__(x_batch, y_batch, output)
+        self.y_onehot = cp.eye(10)[self.y_batch.get().astype(int)]  # One-hot encode labels
+
+    # Categorical Cross-Entrpy Loss Function
+    def calculate_loss(self, epsilon=1e-12):
+        # clip: `maximum(minimum(a, a_max), a_min)` to keep the prediction in range to avoid log(0)
+        self.output = cp.clip(self.output, epsilon, 1)
+        return -cp.mean(cp.sum(self.y_onehot * cp.log(self.output), axis=1))  # Categorical cross entropy formula
+
+
+    def predict(self):
+        return cp.argmax(self.output, axis=1)
+
+    def calculate_gradient(self):
+        return (self.output - self.y_onehot) / self.x_batch.shape[0]  # Multiclass gradient
 
 class DenseLayer:
     """A fully connected neural network layer."""
