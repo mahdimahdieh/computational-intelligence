@@ -38,7 +38,7 @@ class ReLU(ActivationFunction):
         return cp.maximum(0, x)  # Element-wise ReLU
 
     def derivative(self, x):
-        return cp.where(x > 0, cp.ndarray(1.0), cp.ndarray(0.0))  # 1 if x > 0, else 0
+        return cp.where(x > 0, 1.0, 0.0)  # 1 if x > 0, else 0
 
 
 # Abstract Loss Function + Prediction + Gradient
@@ -188,7 +188,7 @@ class NeuralNetwork:
 
                 # Accumulate metrics
                 epoch_loss += classification_results.calculate_loss()
-                correct += cp.sum(cp.ndarray(classification_results.predict() == y_batch))
+                correct += cp.sum(classification_results.predict() == y_batch)
                 total += len(y_batch)
             # Validation
             val_loss, val_acc = self.evaluate(x_val, y_val, classification_task)
@@ -221,6 +221,6 @@ class NeuralNetwork:
 
         classification_results = classification_task(x, y, output)
 
-        acc = cp.mean(cp.ndarray(classification_results.predict() == y))
+        acc = cp.mean(classification_results.predict() == y)
         return classification_results.calculate_loss(), acc
 
