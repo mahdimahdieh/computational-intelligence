@@ -1,78 +1,155 @@
 % !TEX program = xelatex
 \documentclass[12pt]{exam}
-\usepackage{geometry}
+
+\usepackage{setspace}
+\usepackage{listings}
+\usepackage{xcolor}
 \usepackage{xepersian}
-\settextfont{XB Niloofar}
-\usepackage{amsmath, amssymb}
-\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+
+% Define colors
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Configure listings style
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize\setLTR,
+	breakatwhitespace=true,
+	breaklines=true,
+	captionpos=top,
+	keepspaces=true,
+	numbers=left,
+	numbersep=5pt,
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	tabsize=2,
+	frame=single,
+	abovecaptionskip=5pt,
+	belowcaptionskip=5pt,
+}
+
+\lstset{style=mystyle}
+\renewcommand{\lstlistingname}{برنامه}
+\usepackage{graphicx,subfigure,wrapfig}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{pgf-pie}
+\usepackage{etoolbox}
+\usepackage[margin=20mm]{geometry}
 \usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,
+	urlcolor=cyan,
+	pdftitle={بخش چهارم: چالش پیاده‌سازی نیمه‌پیشرفته – سوال ۸},
+	pdfpagemode=FullScreen,
+}
+\settextfont{XB Niloofar}
+
 \begin{document}
-	\begin{center}
-		\LARGE جواب سوال 9
-	\end{center}
-	
-	\noindent
-	\textbf{صورت پرسش:}
-	
-	یک شبکه‌عصبی دو لایه را در نظر بگیرید که ورودی‌های آن از فضای دوبعدی $\mathbb{R}^2$ هستند. هدف این است که این فضا به $m$ ناحیهٔ مجزا تقسیم شود. حداقل چند نورون در لایهٔ پنهان لازم است تا این تقسیم‌بندی ممکن شود؟
 	
 	\vspace{1em}
-	\noindent
-	\textbf{پاسخ:}
 	
-	برای تقسيم $\mathbb{R}^2$ به $m$ ناحيهٔ مجزا با يک شبکهٔ دو لايه، بايد $k$ نورون در لايهٔ پنهان داشته باشيم به طوري که حداکثر تعداد ناحيه‌هاي ايجادشده توسط $k$ خط برابر باشد با:
-	\[
-	N(k)=\frac{k(k+1)}{2}+1.
-	\]
-	پس بايد عدد $k$ کمترين عدد صحيح باشد که
-	\[
-	N(k)\ge m\quad\Longrightarrow\quad \frac{k(k+1)}{2}+1\ge m.
-	\]
-	با حل اين نامعادله، خواهيم داشت:
-	\[
-	k^2 + k -2(m-1)\ge 0
-	\quad\Longrightarrow\quad k\ge \frac{-1+\sqrt{1+8(m-1)}}{2}.
-	\]
-	بنابراين حداقل تعداد نورون‌هاي لايهٔ پنهان:
-	\[
-	k=\left\lceil\frac{-1+\sqrt{8m-7}}{2}\right\rceil.
-	\]
-	
-	\vspace{1em}
-	\noindent
-	\textbf{اثبات فرمول حداکثر تعداد ناحیه‌ها با استفاده از استقرا:}
-	
-	\begin{description}
-		\item[قضيه:] با $k$ خط در صفحه حداکثر $N(k)=k(k+1)/2+1$ ناحيه متناظر ايجاد مي‌شود.
-		\item[پايهٔ استقرا ($k=0$):] با صفر خط در صفحه، تمام صفحه يک ناحيهٔ يکپارچه است. بنابراين
+	\begin{questions}
+		
+		\question
+		\textbf{تشخیص و جدا کردن الگوهای دودویی با پرسپترون تک‌لایه}
+		
+		الگوهای زیر را در نظر بگیرید (۱ = سفید، \(-1\) = سیاه):
 		\[
-		N(0)=\frac{0\cdot1}{2}+1=1,
+		P_1 = 
+		\begin{bmatrix}
+			1 & 1 & 1\\
+			-1 & -1 & -1\\
+			-1 & -1 & -1
+		\end{bmatrix},\quad
+		P_2 = 
+		\begin{bmatrix}
+			-1 & -1 & -1\\
+			1 & 1 & 1\\
+			-1 & -1 & -1
+		\end{bmatrix},\quad
+		P_3 = 
+		\begin{bmatrix}
+			-1 & -1 & -1\\
+			-1 & -1 & -1\\
+			1 & 1 & 1
+		\end{bmatrix},
 		\]
-		که صحيح است.
-		\item[فرض استقرا:] فرض کنيم براي $k$ خط، فرمول
 		\[
-		N(k)=\frac{k(k+1)}{2}+1
+		P_4 = 
+		\begin{bmatrix}
+			1 & -1 & -1\\
+			1 & -1 & -1\\
+			1 & -1 & -1
+		\end{bmatrix},\quad
+		P_5 = 
+		\begin{bmatrix}
+			-1 & 1 & -1\\
+			1 & -1 & 1\\
+			-1 & 1 & -1
+		\end{bmatrix},\quad
+		P_6 = 
+		\begin{bmatrix}
+			-1 & -1 & 1\\
+			-1 & -1 & 1\\
+			-1 & -1 & 1
+		\end{bmatrix}.
 		\]
-		برقرار باشد.
-		\item[گام استقرا ($k\to k+1$):]
-		اگر يک خط تازه به مجموعهٔ $k$ خط اضافه کنيم، اين خط جديد با هر يک از $k$ خط قبلي در يک نقطه تلاقی مي‌کند، بنابراين در مجموع $k$ نقطهٔ تلاقی ايجاد مي‌شود. اين $k$ نقطه، خط جديد را به $k+1$ قطعه تقسيم مي‌کند. هر قطعه يک ناحيهٔ جديد ايجاد مي‌کند. بنابراين:
-		\[
-		N(k+1)=N(k)+(k+1).
-		\]
-		با جاگذاري فرض استقرايي داريم:
-		\[
-		N(k+1)=\frac{k(k+1)}{2}+1+(k+1)
-		=\frac{k(k+1)+2(k+1)}{2}+1
-		=\frac{(k+1)(k+2)}{2}+1.
-		\]
-		بنابراين فرمول براي $k+1$ نيز برقرار است.
-	\end{description}
-	
-	\noindent
-	اين اثبات کامل است و نتيجه مي‌دهد که براي تقسيم $\mathbb{R}^2$ به $m$ ناحيه، حداقل
-	\[
-	\left\lceil\tfrac{-1+\sqrt{8m-7}}{2}\right\rceil
-	\]
-	نورون در لايهٔ پنهان نياز داريم.
+		
+		\begin{parts}
+			\part[الف]
+			نمایش تصویری هر الگو به صورت یک تصویر \(3\times3\) دودویی:
+			
+			\begin{figure}[H]
+				\centering
+				\includegraphics[width=0.6\textwidth]{./figures/question8a.png}
+				\caption{الگوهای \(P_1\) تا \(P_6\) به صورت پیکسل‌های سفید و سیاه}
+				\label{fig:question8a}
+			\end{figure}
+			
+			\part[ب]
+			طراحی یک پرسپترون تک‌لایه با یک نورون برای جدا کردن این الگوها:
+			
+			\begin{itemize}
+				\item وزن‌ها و بایاس اولیه:
+				\[
+				w_1 = w_2 = \cdots = w_9 = 0,\quad b = 0.
+				\]
+				\item تابع فعال‌سازی: 
+				\(\displaystyle
+				y = \mathrm{sign}\bigl(\mathbf{w}^\top \mathbf{x} + b\bigr)
+				\in\{+1,-1\}.
+				\)
+				\item قانون یادگیری پرسپترون:
+				\[
+				w_i \leftarrow w_i + \eta\,(d - y)\,x_i,
+				\quad
+				b \leftarrow b + \eta\,(d - y),
+				\]
+				که \(\eta\) نرخ یادگیری، \(d\) برچسب هدف و \(x_i\) مؤلفهٔ \(i\)ام ورودی است.
+			\end{itemize}
+			
+			\lstinputlisting[language=Python, caption=پیاده‌سازی پرسپترون برای سوال ۸]{./scripts/perceptron8.py}
+			
+			در پایان آموزش تا همگرایی، وزن‌ها و بایاس نهایی به صورت زیر به دست می‌آیند:
+			\[
+			\mathbf{w}_{\mathrm{final}} = [\,w_1^*, w_2^*, \dots, w_9^*\,],
+			\quad
+			b_{\mathrm{final}} = b^*.
+			\]
+			
+		\end{parts}
+		
+	\end{questions}
 	
 \end{document}
