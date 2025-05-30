@@ -208,10 +208,10 @@ class NeuralNetwork:
             val_loss, val_acc = self.evaluate(x_val, y_val, classification_task)
 
             # Record metrics
-            history['loss'].append(avg_loss)
-            history['acc'].append(avg_acc)
-            history['val_loss'].append(val_loss)
-            history['val_acc'].append(val_acc)
+            history['loss'].append(float(avg_loss))
+            history['acc'].append(float(avg_acc))
+            history['val_loss'].append(float(val_loss))
+            history['val_acc'].append(float(val_acc))
 
             # Print progress
             print(f"Epoch {epoch + 1}/{epochs} | Loss: {avg_loss:.4f} | "
