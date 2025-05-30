@@ -1,6 +1,4 @@
 import cupy as cp
-from overrides import overrides
-
 
 # Abstract Activation function
 class ActivationFunction:
@@ -12,11 +10,9 @@ class ActivationFunction:
 
 # Sigmoid Activation function
 class Sigmoid(ActivationFunction):
-    @overrides
     def activate(self, x):
         return 1 / (1 + cp.exp(-x))
 
-    @overrides
     def derivative(self, x):
         """Derivative of sigmoid function."""
         s = self.activate(x)
@@ -56,10 +52,10 @@ class BinaryClassification(ClassificationTask):
 
 class DenseLayer:
     """A fully connected neural network layer."""
-    def __init__(self, input_size, output_size, activation=Sigmoid):
-        self.weights = cp.zeros(input_size, output_size)
+    def __init__(self, input_size, output_size, activation):
+        self.weights = cp.random.randn(input_size, output_size) * 0.01
         self.biases = cp.zeros((1, output_size))
-        self.activation = activation
+        self.activation = activation()
         self.x = None  # Will store layer inputs
         self.z = None  # Will store pre-activation outputs
         self.output = None  # Will store post-activation outputs
@@ -84,7 +80,7 @@ class DenseLayer:
         Returns:
             Gradient to pass to previous layer
         """
-        activation_gradient = self.activation.derivative(self.x)
+        activation_gradient = self.activation.derivative(self.z)
 
         gradient = gradient_output * activation_gradient  # Chain rule
         gradient_weights = cp.dot(self.x.T, gradient)  # Gradient for weights
@@ -188,26 +184,4 @@ class NeuralNetwork:
 
         acc = cp.mean(classification_results.predict() == y)
         return classification_results.calculate_loss(), acc
-
-
-# Evaluation Metrics
-def confusion_matrix(y_true, y_pred):
-    """Compute confusion matrix for binary classification.
-
-    Returns:
-        Tuple of (true positives, false positives, false negatives, true negatives)
-    """
-    tp = cp.sum((y_pred == 1) & (y_true == 1))
-    fp = cp.sum((y_pred == 1) & (y_true == 0))
-    fn = cp.sum((y_pred == 0) & (y_true == 1))
-    tn = cp.sum((y_pred == 0) & (y_true == 0))
-    return tp, fp, fn, tn
-
-
-def f1_score(y_true, y_pred):
-    """Compute F1 score for binary classification."""
-    tp, fp, fn, tn = confusion_matrix(y_true, y_pred)
-    precision = tp / (tp + fp + 1e-12)  # Avoid division by zero
-    recall = tp / (tp + fn + 1e-12)
-    return 2 * (precision * recall) / (precision + recall + 1e-12)
 
