@@ -1,0 +1,262 @@
+\section{مفاهیم و حل مسئله}
+\begin{enumerate}
+	\item بله، هر نورون در یک شبکهٔ عصبی حامل نوعی اطلاعات است؛ اما ماهیت و میزان «وضوح» این اطلاعات بسته به عمق لایه و ویژگی‌های بنیادین شبکه متفاوت است. 
+	
+	
+	 چهار ویژگی بنیادی و سلسله‌مراتبی بودن نمایش:
+	
+	\begin{enumerate}
+		\item \textbf{توابع غیرخطی (Nonlinearity)}
+		\begin{itemize}
+			\item هر نورون پس از ترکیب خطی ورودی‌ها (ضرب وزن‌ها + بایاس) خروجی را از طریق تابعی مانند \lr{ReLU}، \lr{sigmoid} یا \lr{tanh} عبور می‌دهد.
+			\item بدون غیرخطی‌سازی، شبکه عملاً یک عملگر خطی بزرگ خواهد بود و قادر به تشخیص زیرویژگی‌های پیچیده نیست.
+			\item تابع فعال‌سازی باعث می‌شود هر نورون تنها در صورت وقوع یک الگوی خاص «فعال» شود و در نتیجه به‌عنوان یک تشخیص‌دهندهٔ ساده عمل کند.
+		\end{itemize}
+		
+		\item \textbf{نمایش توزیع‌شده (\lr{Distributed Representation})}
+		\begin{itemize}
+			\item برخلاف سیستم‌های سمبلیک که هر مفهوم را با یک واحد منفرد نمایش می‌دهند، شبکه‌های عصبی مفاهیم را به‌صورت همزمان در بردار فعال‌سازی تعداد زیادی نورون کدگذاری می‌کنند.
+			\item این پراکندگی اطلاعات باعث افزایش مقاومت شبکه در برابر نویز و آسیب به نورون‌های منفرد می‌شود.
+			\item هر نورون سهم جزئی اما معنادار در تشخیص زیرویژگی‌های ساده یا انتزاعی دارد.
+		\end{itemize}
+		
+		\item \textbf{یادگیری گرادیان‌محور (\lr{Gradient‐based Learning})}
+		\begin{itemize}
+			\item با استفاده از الگوریتم پس‌انتشار (\lr{Backpropagation})، وزن‌ها و بایاس هر نورون به‌روزرسانی می‌شود تا خطای خروجی به کمترین مقدار برسد.
+			\item در طی آموزش، هر نورون به زیرویژگی‌هایی پاسخ می‌دهد که برای کاهش خطا در مسئلهٔ مشخص مفیدند.
+			\item در پایان آموزش، وزن‌های ورودی هر نورون تعیین می‌کنند که آن نورون به چه الگو یا ویژگی‌ حساس باشد.
+		\end{itemize}
+		
+		\item \textbf{سلسله‌مراتب ویژگی‌ها (\lr{Hierarchical Feature Learning})}
+		\begin{itemize}
+			\item لایه‌های ابتدایی شبکه‌های عمیق معمولاً به زیرویژگی‌های ساده مانند لبه‌های عمودی/افقی یا بافت‌ها حساس‌اند.
+			\item لایه‌های میانی ترکیب این زیرویژگی‌ها را انجام داده و الگوهای پیچیده‌تر  را می‌آموزند.
+			\item در لایهٔ خروجی (مثلاً نورون‌های \lr{softmax}) احتمال تعلق هر ورودی به یک کلاس نهایی (مثلاً «گربه» یا «سگ») کدگذاری می‌شود.
+		\end{itemize}
+	\end{enumerate}
+	
+	\item در شبکه‌های عصبی، «دانش» در قالب پارامترها (وزن‌ها و بایاس‌ها) ذخیره می‌شود و از طریق فرآیند آموزش شکل می‌گیرد؛ در ادامه، یک پاسخ یکپارچه و مرتب‌شده ارائه شده است:
+	
+	\begin{enumerate}
+		\item \textbf{شکل‌گیری دانش در شبکه‌های عصبی}
+		\begin{enumerate}
+			\item \textbf{تعریف ساختار شبکه (\lr{Architecture}):}  
+			انتخاب تعداد لایه‌ها (\lr{Input, Hidden, Output})، نوع آن‌ها (\lr{fully-connected}، کانولوشن، بازگشتی و …) و تعداد نورون در هر لایه.
+			\item \textbf{مقداردهی اولیه پارامترها (\lr{Initialization}):}  
+			وزن‌ها و بایاس‌ها معمولاً با توزیع‌های تصادفی (مثل \lr{Xavier} یا \lr{He}) مقداردهی می‌شوند.
+			\item \textbf{انتشار رو به جلو (\lr{Forward Propagation}):}  
+			برای هر ورودی \(x\)، در هر لایه:
+			\[
+			z^{(\ell)} = W^{(\ell)}\,a^{(\ell-1)} + b^{(\ell)}, 
+			\quad
+			a^{(\ell)} = \sigma\bigl(z^{(\ell)}\bigr)
+			\]
+			در نهایت \(a^{(L)}\) خروجی نهایی شبکه است.
+			\item \textbf{محاسبه خطا (\lr{Loss Calculation}):}  
+			با تابع هزینه \(L\bigl(y_{\text{pred}},\,y_{\text{true}}\bigr)\)، مانند MSE برای رگرسیون یا Cross-Entropy برای طبقه‌بندی.
+			\item \textbf{پس انتشار خطا (\lr{Backpropagation}):}  
+			مشتق تابع هزینه را نسبت به پارامترها محاسبه می‌کنیم:
+			\[
+			\frac{\partial L}{\partial W^{(\ell)}},\quad
+			\frac{\partial L}{\partial b^{(\ell)}}
+			\]
+			\item \textbf{به‌روزرسانی پارامترها (\lr{Optimization}):}  
+			با الگوریتم‌هایی مثل \lr{Gradient Descent} یا \lr{Adam}:
+			\[
+			W^{(\ell)} \leftarrow W^{(\ell)} - \eta\,\frac{\partial L}{\partial W^{(\ell)}}, 
+			\quad
+			b^{(\ell)} \leftarrow b^{(\ell)} - \eta\,\frac{\partial L}{\partial b^{(\ell)}}
+			\]
+			این چرخه تا رسیدن به همگرایی تکرار می‌شود.
+		\end{enumerate}
+		
+		\item \textbf{فرمول‌بندی «معادل بودن» دو شبکه عصبی}
+		\begin{enumerate}
+			\item \textbf{معادل تابعی (\lr{Exact Functional Equivalence})}  
+			دو شبکه \(N(x)=f_{\theta_N}(x)\) و \(M(x)=f_{\theta_M}(x)\) دقیقاً معادل‌اند اگر:
+			\[
+			\forall x\in X,\quad N(x)=M(x).
+			\]
+			\item \emph{معادل ساختاری تحت تبدیلات (\lr{Structural Equivalence})}  
+			در لایه‌های \lr{Dense}، جابجایی نورون‌ها (پرموتیشن \(\pi\)) همراه با جابجایی سطرها/ستون‌های متناظر در \(W,b\)، خروجی را تغییر نمی‌دهد.
+			\item \emph{تقریب معادل (\lr{Approximate Equivalence})}  
+			با فاصلهٔ خروجی \(d(x)=\|N(x)-M(x)\|_p\):
+			\[
+			\forall x\in X,\;d(x)<\epsilon
+			\quad\text{یا}\quad
+			\mathrm{KL}\bigl(N(x)\Vert M(x)\bigr)<\delta.
+			\]
+		\end{enumerate}
+		
+		\item \textbf{مثال ریاضی}
+		\begin{enumerate}
+			\item \textbf{حالت سادهٔ خطی:}  
+			دو شبکه خطی با یک لایه پنهان و \(\sigma(z)=z\):
+			\[
+			N(x)=W_2\,(W_1\,x+b_1)+b_2,\quad
+			M(x)=W_2'\,(W_1'\,x+b_1')+b_2'.
+			\]
+			آن‌ها معادل‌اند اگر:
+			\[
+			W_2W_1 = W_2'W_1', 
+			\quad
+			W_2b_1 + b_2 = W_2'b_1' + b_2'.
+			\]
+			\item \emph{اشاره‌ای به حالت غیرخطی:}  
+			در شبکه‌های غیرخطی (مثلاً \lr{ReLU})، تبدیلات پیچیده‌ترند؛ اما با ادغام \lr{BatchNorm} یا تبدیلات جبری می‌توان مشابهت رفتار را نشان داد.
+		\end{enumerate}
+		
+	\end{enumerate}
+	
+	\item در شبکه‌های عصبی، توانایی یادگیری، به‌خاطر سپاری (\lr{Memorization}) و تعمیم (\lr{Generalization}) بر پایه‌ی ساختار معماری، الگوریتم‌های آموزش و ویژگی‌های داده‌ها شکل می‌گیرد. در ادامه، این سه قابلیت را همراه با مبانی ریاضی و مثال‌های عینی بررسی می‌کنیم.
+	
+	\begin{enumerate}
+		\item \textbf{یادگیری (\lr{Learning})}\\
+		شبکه با کمینه‌سازی تابع هزینه
+		\[
+		L(\theta) = \frac{1}{N} \sum_{i=1}^{N} \ell\bigl(f_\theta(x_i), y_i\bigr)
+		\]
+		و به‌کارگیری انتشار رو به جلو و پسانتشار خطا (Backpropagation)، پارامترهای \(\theta\) (وزن‌ها و بایاس‌ها) را با الگوریتم‌های گرادیان‌محور (SGD، Adam و…) به‌روزرسانی می‌کند:
+		\[
+		\theta \;\leftarrow\; \theta - \eta\,\nabla_\theta L(\theta).
+		\]
+		\begin{itemize}
+			\item \textbf{قضیه تقریب جهانی (\lr{Universal Approximation Theorem})}  
+			هر شبکه‌ی با حداقل یک لایه پنهان و تابع فعال‌سازی غیرفابی (مثلاً \lr{ReLU} یا \lr{Sigmoid}) می‌تواند هر تابع پیوسته روی یک مجموعه‌ی کامپکت را تقریب بزند.
+			\item \textbf{ویژگی توزیعی (\lr{Distributed Representation})}  
+			هر نورون یا زیراسختار فقط بخشی از ویژگی‌های داده را مدل می‌کند و با ترکیب میلیون‌ها پارامتر، شبکه قادر به نمایش الگوهای غیرخطی و سلسله‌مراتبی است.
+		\end{itemize}
+		
+		\item \textbf{به‌خاطر سپاری (\lr{Memorization})}\\
+		شبکه‌های \lr{overparameterized} (پارامترها خیلی بزرگتر از نمونه‌ها) می‌توانند جزئیات حتی نویزی داده‌های آموزشی را حفظ کنند:
+		\[
+		\text{High Capacity: VC-Dimension و Rademacher Complexity بزرگ.}
+		\]
+		\begin{itemize}
+			\item \textbf{مثال \lr{Bias–Variance Tradeoff}:}  
+			\[
+			\text{Complexity}\!\uparrow \;\to\; \text{Bias}\!\downarrow,\;\text{Variance}\!\uparrow,\;\text{Memorization}\!\uparrow
+			\]
+			اگر هیچ ضابطه‌ای (\lr{Regularization}) وجود نداشته باشد، شبکه می‌تواند اطلاعات آموزشی را تقریباً کامل بازتولید کند.
+		\end{itemize}
+		
+		\item \textbf{تعمیم (\lr{Generalization})}\\
+		تعمیم یعنی عملکرد خوب روی داده‌های ندیده. این امر با ترکیب مکانیزم‌های \lr{implicit} و \lr{explicit regularization} و \lr{Inductive Bias} حاصل می‌شود:
+		\[
+		L_{\text{reg}}(\theta) = L(\theta) + \lambda \|\theta\|_2^2
+		\]
+		\begin{itemize}
+			\item \textbf{\lr{\lr{Implicit Regularization}}:} رفتار SGD شبکه را به سمت مینیمم‌های تخت (\lr{flat minima}) هدایت می‌کند.
+			\item \textbf{\lr{Regularization} صریح:}
+			\begin{itemize}
+				\item \lr{Weight Decay} (\lr{L2}): افزودن \(\lambda\|\theta\|_2^2\) به تابع هزینه.
+				\item \lr{Dropout}: غیرفعال‌سازی تصادفی نورون‌ها.
+				\item \lr{Early Stopping}: پایان آموزش پیش از شروع شدید Overfitting.
+			\end{itemize}
+			\item \textbf{\lr{Inductive Bias} معماری:}
+			\begin{itemize}
+				\item \lr{CNN}: اشتراک وزن‌ها و حساسیت به ویژگی‌های مکانی.
+				\item \lr{RNN/Transformer}: نگاشت توالی‌های زمانی و وابستگی‌های ترتیبی.
+			\end{itemize}
+			\item \textbf{نرمال‌سازی (\lr{Batch Normalization})}  
+			کاهش حساسیت به مقیاس وزن‌ها و تثبیت جریان گرادیان.
+			\item \textbf{داده‌های متنوع و کافی}  
+			کمیت و کیفیت داده‌های آموزشی پایه‌ی استخراج قاعده‌های عمومی و کاهش \lr{Overfitting} است.
+		\end{itemize}
+		
+		\item \textbf{پیوند با «معادل بودن دو شبکه» و «شکل‌گیری دانش»}\\
+		شکل‌گیری دانش = پارامترهای بهینه \(\theta\) که از فرآیند یادگیری به‌دست می‌آیند.  
+		\emph{معادل بودن دو شبکه} وقتی است که:
+		\[
+		\forall x,\; N(x) = M(x)
+		\quad\text{(Exact Functional)}
+		\]
+		یا با پرموتیشن \(\pi\) روی نورون‌ها (\lr{Structural Symmetry})، یا تقریباً:
+		\[
+		\|N(x)-M(x)\|_p < \varepsilon
+		\quad\text{یا}\quad
+		\mathrm{KL}\bigl(N(x)\,\|\,M(x)\bigr) < \delta.
+		\]
+	\end{enumerate}
+	
+	\newpage
+	
+	\item در زیر سه نوع رایج از “توابع تبدیل نورونی” (یا به‌عبارت دیگر انواع نورون‌های مرتبه‌بالا و \lr{RBF}) را به‌صورت ریاضی می‌بینید:
+	\begin{enumerate}
+		\item \textbf{نورون درجه دوم (\lr{Quadratic Neuron}):}
+		\[
+		\begin{aligned}
+			\mathrm{net}(\mathbf{x})
+			&= \sum_{i=1}^n \sum_{j=1}^n w_{ij}\,x_i\,x_j
+			+ \sum_{i=1}^n v_i\,x_i
+			+ b,\\
+			y &= f\bigl(\mathrm{net}(\mathbf{x})\bigr),
+		\end{aligned}
+		\]
+		که در آن
+		\begin{itemize}
+			\item $\mathbf{x}=(x_1,\dots,x_n)\in\mathbb{R}^n$،
+			\item $w_{ij}$ ضرایب ضرب‌های درجه دوم،
+			\item $v_i$ ضرایب ترکیب خطی،
+			\item $b$ بایاس،
+			\item $f(\cdot\cdot\cdot)$ تابع فعال‌سازی.
+		\end{itemize}
+		
+		\item \textbf{نورون کروی (\lr{Spherical / RBF Neuron}):}
+		\[
+		\mathrm{net}(\mathbf{x})
+		= \bigl\lVert \mathbf{x} - \boldsymbol{\mu}\bigr\rVert
+		= \sqrt{\sum_{i=1}^n (x_i - \mu_i)^2},
+		\quad
+		y = f\bigl(\mathrm{net}(\mathbf{x})\bigr),
+		\]
+		یا گونه‌ی مربعی بدون ریشه:
+		\[
+		\mathrm{net}(\mathbf{x})
+		= \sum_{i=1}^n (x_i - \mu_i)^2,
+		\quad
+		y = \exp\bigl(-\gamma\,\mathrm{net}(\mathbf{x})\bigr),
+		\]
+		که در آن
+		\begin{itemize}
+			\item $\boldsymbol{\mu}=(\mu_1,\dots,\mu_n)$ مرکز نورون،
+			\item $\gamma>0$ ضریب پهنای باند،
+			\item $f(\cdot)$ می‌تواند تابع خطی یا نمایی باشد.
+		\end{itemize}
+		
+		\item \textbf{نورون چندجمله‌ای (\lr{Polynomial Neuron}):}
+		ابتدا ترکیب خطی و توان:
+		\[
+		u = \sum_{i=1}^n w_i\,x_i + b,
+		\quad
+		y = u^d
+		= \Bigl(\sum_{i=1}^n w_i\,x_i + b\Bigr)^{d}.
+		\]
+		به‌صورت کلی برای ورودی چندبعدی:
+		\[
+		y 
+		= \sum_{\substack{\alpha_1+\cdots+\alpha_n \le d}}
+		w_{\alpha_1,\dots,\alpha_n}
+		\;x_1^{\alpha_1}\cdots x_n^{\alpha_n},
+		\]
+		که در آن
+		\begin{itemize}
+			\item $d$ درجه چندجمله‌ای،
+			\item $\alpha_i\in\mathbb{N}_0$ اندیس‌های چندجمله‌ای،
+			\item $w_{\alpha_1,\dots,\alpha_n}$ ضرایب متناظر.
+		\end{itemize}
+	\end{enumerate}
+	
+	\item  سوال 5
+	
+	\item  سوال 6
+	
+	\item  سوال 7
+	
+	\item  سوال 8
+	
+	\item  سوال 9
+
+	
+	
+\end{enumerate}
