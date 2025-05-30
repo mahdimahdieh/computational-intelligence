@@ -256,7 +256,7 @@
 		
 		\begin{figure}[H]
 			\centering
-			\includegraphics[width=0.45\textwidth]{tak.png}
+			\includegraphics[width=0.45\textwidth]{./figures/tak.png}
 			\caption{شبکه عصبی تک‌نورونی با فیدبک به خود}
 		\end{figure}
 		
@@ -265,7 +265,7 @@
 		
 		\begin{figure}[H]
 			\centering
-			\includegraphics[width=0.50\textwidth]{tartibi.png}
+			\includegraphics[width=0.50\textwidth]{./figures/tartibi.png}
 			\caption{شبکه عصبی تک‌لایه با فیدبک - حالت اول}
 		\end{figure}
 		
@@ -274,7 +274,7 @@
 		
 		\begin{figure}[H]
 			\centering
-			\includegraphics[width=0.55\textwidth]{total.png}
+			\includegraphics[width=0.55\textwidth]{./figures/total.png}
 			\caption{شبکه عصبی تک‌لایه با فیدبک - حالت دوم}
 		\end{figure}
 		
@@ -415,6 +415,7 @@
 			\end{tikzpicture}
 		\end{center}
 		
+		\newpage
 		\item 
 		\textbf{تشخیص قابلیت جداسازی و تعیین بازه \(\varepsilon\)}
 		
@@ -456,12 +457,19 @@
 		
 	\end{enumerate}
 
-
+						%%%%%%%%%%سوال 8%%%%%%%%%%%%%%%
 
 
 	\item  
 	\begin{enumerate}
-		\item قسمت الف
+		\item نمایش تصویری هر الگو به صورت یک تصویر \(3\times3\) دودویی:
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.6\textwidth]{./figures/question8a.png}
+			\caption{الگوهای \(P_1\) تا \(P_6\) به صورت پیکسل‌های سفید و سیاه}
+			\label{fig:question8a}
+		\end{figure}
 		\item 
 		\begin{itemize}
 			\item برای تشخیص الگوهای $P_1$ تا $P_6$ از یکدیگر با استفاده از یک پرسپترون تک‌لایه با یک نرون، نیاز داریم که هر الگو را به صورت یک بردار ورودی مناسب برای نرون تبدیل کنیم. از آنجا که هر الگو یک ماتریس $3\times3$ است، می‌توانیم آن را به یک بردار $1\times9$ تبدیل کنیم. برای سادگی، فرض می‌کنیم که ماتریس را به صورت سطر به سطر به یک بردار 9 عنصری تبدیل می‌کنیم.
@@ -480,7 +488,7 @@
 				\item کلاس 0: $P_4, P_5, P_6$ (تارگت $t=0$)
 			\end{itemize}
 			\item مشخصات پرسپترون:
-			\begin{itemize}
+			\begin{itemize} 
 				\item تعداد ورودی: 9
 				\item تعداد نرون: 1
 				\item تابع فعال‌سازی: تابع پله با آستانه صفر
@@ -530,7 +538,93 @@
 			\item نحوه تشخیص الگوها: با وزن‌ها و بایاس نهایی، خروجی 1 برای $P_1,P_2,P_3$ و خروجی 0 برای $P_4,P_5,P_6$ خواهد بود.
 		\end{itemize}
 	\end{enumerate}
-	\item  سوال 9
+	طراحی یک پرسپترون تک‌لایه با یک نورون برای جدا کردن این الگوها:
+	
+	\begin{itemize}
+		\item وزن‌ها و بایاس اولیه:
+		\[
+		w_1 = w_2 = \cdots = w_9 = 0,\quad b = 0.
+		\]
+		\item تابع فعال‌سازی: 
+		\(\displaystyle
+		y = \mathrm{sign}\bigl(\mathbf{w}^\top \mathbf{x} + b\bigr)
+		\in\{+1,-1\}.
+		\)
+		\item قانون یادگیری پرسپترون:
+		\[
+		w_i \leftarrow w_i + \eta\,(d - y)\,x_i,
+		\quad
+		b \leftarrow b + \eta\,(d - y),
+		\]
+		که \(\eta\) نرخ یادگیری، \(d\) برچسب هدف و \(x_i\) مؤلفهٔ \(i\)ام ورودی است.
+	\end{itemize}
+	
+	\lstinputlisting[language=Python, caption=پیاده‌سازی پرسپترون برای سوال ۸]{./scripts/perceptron8.py}
+	
+	در پایان آموزش تا همگرایی، وزن‌ها و بایاس نهایی به صورت زیر به دست می‌آیند:
+	\[
+	\mathbf{w}_{\mathrm{final}} = [\,w_1^*, w_2^*, \dots, w_9^*\,],
+	\quad
+	b_{\mathrm{final}} = b^*.
+	\]
+	
+	
+						%%%%%%%%سوال 9%%%%%%%%%%%%%%
+	\item  
+	برای تقسيم $\mathbb{R}^2$ به $m$ ناحيهٔ مجزا با يک شبکهٔ دو لايه، بايد $k$ نورون در لايهٔ پنهان داشته باشيم به طوري که حداکثر تعداد ناحيه‌هاي ايجادشده توسط $k$ خط برابر باشد با:
+	\[
+	N(k)=\frac{k(k+1)}{2}+1.
+	\]
+	پس بايد عدد $k$ کمترين عدد صحيح باشد که
+	\[
+	N(k)\ge m\quad\Longrightarrow\quad \frac{k(k+1)}{2}+1\ge m.
+	\]
+	با حل اين نامعادله، خواهيم داشت:
+	\[
+	k^2 + k -2(m-1)\ge 0
+	\quad\Longrightarrow\quad k\ge \frac{-1+\sqrt{1+8(m-1)}}{2}.
+	\]
+	بنابراين حداقل تعداد نورون‌هاي لايهٔ پنهان:
+	\[
+	k=\left\lceil\frac{-1+\sqrt{8m-7}}{2}\right\rceil.
+	\]
+	
+	\vspace{1em}
+	\noindent
+	\textbf{اثبات فرمول حداکثر تعداد ناحیه‌ها با استفاده از استقرا:}
+	
+	\begin{description}
+		\item[قضيه:] با $k$ خط در صفحه حداکثر $N(k)=k(k+1)/2+1$ ناحيه متناظر ايجاد مي‌شود.
+		\item[پايهٔ استقرا ($k=0$):] با صفر خط در صفحه، تمام صفحه يک ناحيهٔ يکپارچه است. بنابراين
+		\[
+		N(0)=\frac{0\cdot1}{2}+1=1,
+		\]
+		که صحيح است.
+		\item[فرض استقرا:] فرض کنيم براي $k$ خط، فرمول
+		\[
+		N(k)=\frac{k(k+1)}{2}+1
+		\]
+		برقرار باشد.
+		\item[گام استقرا ($k\to k+1$):]
+		اگر يک خط تازه به مجموعهٔ $k$ خط اضافه کنيم، اين خط جديد با هر يک از $k$ خط قبلي در يک نقطه تلاقی مي‌کند، بنابراين در مجموع $k$ نقطهٔ تلاقی ايجاد مي‌شود. اين $k$ نقطه، خط جديد را به $k+1$ قطعه تقسيم مي‌کند. هر قطعه يک ناحيهٔ جديد ايجاد مي‌کند. بنابراين:
+		\[
+		N(k+1)=N(k)+(k+1).
+		\]
+		با جاگذاري فرض استقرايي داريم:
+		\[
+		N(k+1)=\frac{k(k+1)}{2}+1+(k+1)
+		=\frac{k(k+1)+2(k+1)}{2}+1
+		=\frac{(k+1)(k+2)}{2}+1.
+		\]
+		بنابراين فرمول براي $k+1$ نيز برقرار است.
+	\end{description}
+	
+	\noindent
+	اين اثبات کامل است و نتيجه مي‌دهد که براي تقسيم $\mathbb{R}^2$ به $m$ ناحيه، حداقل
+	\[
+	\left\lceil\tfrac{-1+\sqrt{8m-7}}{2}\right\rceil
+	\]
+	نورون در لايهٔ پنهان نياز داريم.
 
 	
 	
