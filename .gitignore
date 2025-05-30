@@ -485,3 +485,7 @@ TSWLatexianTemp*
 
 .idea/*
 .idea
+
+# cifar10 dataset path
+/Phase 3 Neural Network/task1-4/data/cifar-10-batches-py/
+/Phase 3 Neural Network/task1-4/data/cifar-10-python.tar.gz
