@@ -82,12 +82,12 @@ class CategoricalClassification(ClassificationTask):
         self.output = cp.clip(self.output, epsilon, 1)
         return -cp.mean(cp.sum(self.y_onehot * cp.log(self.output), axis=1))  # Categorical cross entropy formula
 
-
     def predict(self):
         return cp.argmax(self.output, axis=1)
 
     def calculate_gradient(self):
         return (self.output - self.y_onehot) / self.x_batch.shape[0]  # Multiclass gradient
+
 
 class DenseLayer:
     """A fully connected neural network layer."""
