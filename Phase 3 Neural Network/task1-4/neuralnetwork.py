@@ -170,38 +170,52 @@ class NeuralNetwork:
         history = {'loss': [], 'acc': [], 'val_loss': [], 'val_acc': []}
 
         for epoch in range(epochs):
-            epoch_loss = 0
+            epoch_loss = 0.0
             correct = 0
             total = 0
+            batch_count = 0
 
-            # Mini-batch training
             for i in range(0, x_train.shape[0], batch_size):
                 x_batch = x_train[i:i + batch_size]
                 y_batch = y_train[i:i + batch_size]
+                batch_count += 1
 
                 # Forward pass
                 output = self.forward(x_batch)
+                results = classification_task(x_batch, y_batch, output)
 
-                classification_results = classification_task(x_batch, y_batch, output)
+                # Backward pass
+                self.backward(results.calculate_gradient(), learning_rate)
 
-                self.backward(classification_results.calculate_gradient(), learning_rate)
+                # Calculate batch accuracy correctly
+                predictions = results.predict()
+                # Ensure both are 1D arrays for correct comparison
+                y_batch_flat = y_batch.flatten() if y_batch.ndim > 1 else y_batch
+                predictions_flat = predictions.flatten()
 
-                # Accumulate metrics
-                epoch_loss += classification_results.calculate_loss()
-                correct += cp.sum(classification_results.predict() == y_batch)
+                # Convert to int after GPU computation
+                correct += int(cp.sum(predictions_flat == y_batch_flat).get())
                 total += len(y_batch)
+
+                # Accumulate loss
+                epoch_loss += float(results.calculate_loss())
+
+            # Calculate epoch metrics
+            avg_loss = epoch_loss / batch_count
+            avg_acc = correct / total
+
             # Validation
             val_loss, val_acc = self.evaluate(x_val, y_val, classification_task)
 
             # Record metrics
-            history['loss'].append(epoch_loss / (i // batch_size + 1))
-            history['acc'].append(correct / total)
+            history['loss'].append(avg_loss)
+            history['acc'].append(avg_acc)
             history['val_loss'].append(val_loss)
             history['val_acc'].append(val_acc)
 
             # Print progress
-            print(f"Epoch {epoch + 1}/{epochs} | Loss: {history['loss'][-1]:.4f} | "
-                  f"Acc: {history['acc'][-1]:.4f} | Val Loss: {val_loss:.4f} | "
+            print(f"Epoch {epoch + 1}/{epochs} | Loss: {avg_loss:.4f} | "
+                  f"Acc: {avg_acc:.4f} | Val Loss: {val_loss:.4f} | "
                   f"Val Acc: {val_acc:.4f}")
 
         return history
